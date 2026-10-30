@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroMart | Electrical Supplies & Appliances</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <a class="brand" href="{{ url_for('home') }}">⚡ ElectroMart</a>
+    <nav>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+        <a class="owner-link" href="{{ url_for('login') }}">Owner Login</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="eyebrow">YOUR LOCAL ELECTRICAL STORE</span>
+        <h1>Powering your home,<br><span>one connection at a time.</span></h1>
+        <p>Electrical supplies, lighting, wiring materials and home appliances in one place.</p>
+        <a class="btn" href="#products">Explore Products ↓</a>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+        <div class="orb orb-one"></div>
+        <div class="orb orb-two"></div>
+        <div class="bolt">⚡</div>
+    </div>
+</section>
+
+<main id="products" class="section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">OUR COLLECTION</span>
+            <h2>Find what your home needs</h2>
+        </div>
+        <input id="searchInput" type="search"
+               placeholder="Search lights, wires, fans..." aria-label="Search products">
+    </div>
+
+    <div class="category-list">
+        <button class="category-btn active" data-category="all">All Products</button>
+        {% for category in categories %}
+        <button class="category-btn" data-category="{{ category }}">{{ category }}</button>
+        {% endfor %}
+    </div>
+
+    <div class="product-grid" id="productGrid">
+        {% for product in products %}
+        <article class="product-card"
+                 data-name="{{ product.name|lower }}"
+                 data-category="{{ product.category }}">
+            <div class="product-image">
+                {% if product.image %}
+                    <img src="{{ url_for('static', filename=product.image) }}"
+                         alt="{{ product.name }}" loading="lazy">
+                {% else %}
+                    <div class="image-placeholder">⚡</div>
+                {% endif %}
+            </div>
+
+            <div class="product-info">
+                <span class="product-category">{{ product.category }}</span>
+                <h3>{{ product.name }}</h3>
+                <p class="description">{{ product.description or "Contact the store for details." }}</p>
+
+                <div class="product-bottom">
+                    <strong class="price">₹{{ "%.2f"|format(product.price) }}</strong>
+                    {% if product.stock > 0 %}
+                        <span class="stock">In stock</span>
+                    {% else %}
+                        <span class="stock out">Check availability</span>
+                    {% endif %}
+                </div>
+
+                {% if product.document %}
+                <a class="file-link"
+                   href="{{ url_for('static', filename=product.document) }}"
+                   target="_blank" rel="noopener">View product PDF ↗</a>
+                {% endif %}
+
+                {% if product.video %}
+                <details class="video-details">
+                    <summary>▶ Watch product video</summary>
+                    <video controls preload="metadata">
+                        <source src="{{ url_for('static', filename=product.video) }}">
+                        Your browser cannot play this video.
+                    </video>
+                </details>
+                {% endif %}
+            </div>
+        </article>
+        {% else %}
+        <p>No products have been added yet.</p>
+        {% endfor %}
+    </div>
+
+    <p id="noResults" class="empty-state" hidden>No matching products found.</p>
+</main>
+
+<section class="about-section" id="about">
+    <span class="eyebrow">EASY. RELIABLE. LOCAL.</span>
+    <h2>Everything electrical, all in one place.</h2>
+    <p>From LED lights and wires to fans, switches, tools and household appliances.</p>
+</section>
+
+<footer class="footer">
+    <a class="brand" href="{{ url_for('home') }}">⚡ ElectroMart</a>
+    <p>Electrical supplies and home appliances.</p>
+    <small>Prices and availability may change. Please confirm with the store before purchasing.</small>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

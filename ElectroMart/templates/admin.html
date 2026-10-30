@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard | ElectroMart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+    <a class="brand" href="{{ url_for('home') }}">⚡ ElectroMart</a>
+    <nav>
+        <a href="{{ url_for('home') }}" target="_blank">View shop ↗</a>
+        <form method="POST" action="{{ url_for('logout') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="owner-link" type="submit">Log out</button>
+        </form>
+    </nav>
+</header>
+
+<main class="admin-container">
+    <div class="admin-heading">
+        <div>
+            <span class="eyebrow">OWNER CONTROL PANEL</span>
+            <h1>Manage your shop</h1>
+            <p>Change product prices, details, photos, PDFs and videos.</p>
+        </div>
+        <div class="admin-count">{{ products|length }} products</div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="admin-panel">
+        <h2>＋ Add a new product</h2>
+        <form class="product-form" method="POST"
+              action="{{ url_for('add_product') }}" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="form-grid">
+                <div>
+                    <label>Product name *</label>
+                    <input name="name" required maxlength="150"
+                           placeholder="e.g. LED Bulb 12W">
+                </div>
+
+                <div>
+                    <label>Category *</label>
+                    <select name="category" required>
+                        {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label>Price in ₹ *</label>
+                    <input name="price" type="number" min="0" step="0.01" required>
+                </div>
+
+                <div>
+                    <label>Stock quantity *</label>
+                    <input name="stock" type="number" min="0" step="1"
+                           value="1" required>
+                </div>
+
+                <div class="wide">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" maxlength="2000"
+                              placeholder="Product details and specifications"></textarea>
+                </div>
+
+                <div>
+                    <label>Product photo (JPG, PNG, WebP, GIF)</label>
+                    <input name="image" type="file"
+                           accept=".jpg,.jpeg,.png,.webp,.gif">
+                </div>
+
+                <div>
+                    <label>Product PDF document</label>
+                    <input name="document" type="file" accept=".pdf">
+                </div>
+
+                <div class="wide">
+                    <label>Product video (MP4 or WebM)</label>
+                    <input name="video" type="file" accept=".mp4,.webm">
+                </div>
+            </div>
+
+            <p class="help-text">
+                Each request is limited to 100 MB. Upload only files you own or have permission to use.
+            </p>
+            <button class="btn" type="submit">＋ Add product</button>
+        </form>
+    </section>
+
+    <section class="manage-section">
+        <h2>Your products</h2>
+
+        {% for product in products %}
+        <article class="manage-card">
+            <div class="manage-top">
+                <div class="manage-product">
+                    {% if product.image %}
+                    <img src="{{ url_for('static', filename=product.image) }}"
+                         alt="{{ product.name }}">
+                    {% else %}
+                    <div class="small-placeholder">⚡</div>
+                    {% endif %}
+                    <div>
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.category }} · ₹{{ "%.2f"|format(product.price) }}</p>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ url_for('delete_product', product_id=product.id) }}"
+                      onsubmit="return confirm('Delete this product permanently?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
+
+            <details class="edit-details">
+                <summary>✎ Edit product, price or uploaded files</summary>
+
+                <form class="product-form" method="POST"
+                      action="{{ url_for('edit_product', product_id=product.id) }}"
+                      enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="form-grid">
+                        <div>
+                            <label>Product name</label>
+                            <input name="name" value="{{ product.name }}" required maxlength="150">
+                        </div>
+
+                        <div>
+                            <label>Category</label>
+                            <select name="category" required>
+                                {% for category in categories %}
+                                <option value="{{ category }}"
+                                    {% if product.category == category %}selected{% endif %}>
+                                    {{ category }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Price in ₹</label>
+                            <input name="price" type="number" min="0" step="0.01"
+                                   value="{{ product.price }}" required>
+                        </div>
+
+                        <div>
+                            <label>Stock quantity</label>
+                            <input name="stock" type="number" min="0" step="1"
+                                   value="{{ product.stock }}" required>
+                        </div>
+
+                        <div class="wide">
+                            <label>Description</label>
+                            <textarea name="description" rows="3" maxlength="2000">{{ product.description }}</textarea>
+                        </div>
+
+                        <div>
+                            <label>Replace photo (optional)</label>
+                            <input name="image" type="file"
+                                   accept=".jpg,.jpeg,.png,.webp,.gif">
+                            {% if product.image %}
+                            <small>Current photo is saved. Leave empty to keep it.</small>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label>Replace PDF (optional)</label>
+                            <input name="document" type="file" accept=".pdf">
+                            {% if product.document %}
+                            <small>Leave empty to keep the current PDF.</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="wide">
+                            <label>Replace video (optional)</label>
+                            <input name="video" type="file" accept=".mp4,.webm">
+                            {% if product.video %}
+                            <small>Leave empty to keep the current video.</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button class="btn" type="submit">Save changes</button>
+                </form>
+            </details>
+        </article>
+        {% else %}
+        <p>No products yet. Add your first product above.</p>
+        {% endfor %}
+    </section>
+</main>
+</body>
+</html>
