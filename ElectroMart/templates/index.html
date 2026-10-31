@@ -2,91 +2,79 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
 <title>ElectroMart - Dehradun</title>
-
-<!-- ✅ PWA - Bamarara Electronics App ke liye -->
 <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 <meta name="theme-color" content="#0f172a">
 <link rel="apple-touch-icon" href="{{ url_for('static', filename='icon-192.png') }}">
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
-html { padding-top: env(safe-area-inset-top); background: #fff; }
-body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color 0.3s; padding-top: env(safe-area-inset-top, 28px); }
-.top-nav { background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:env(safe-area-inset-top, 28px); z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.04); overflow:visible; }
+html { background:#f8fafc; -webkit-text-size-adjust: 100%; }
+body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color 0.3s; padding-top:0; }
+.top-nav { background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1000; box-shadow:0 2px 10px rgba(0,0,0,0.04); overflow:visible; min-height:54px; }
 .top-nav .left { display:flex; align-items:center; gap:14px; overflow:auto; scrollbar-width:none; flex:1; }
 .top-nav .left::-webkit-scrollbar { display:none; }
 .top-nav .logo { font-weight:900; font-size:19px; color:#0f172a; display:flex; align-items:center; gap:6px; text-decoration:none; letter-spacing:-0.5px; }
 .top-nav .nav-link { font-size:13px; color:#475569; text-decoration:none; padding:7px 14px; border-radius:20px; white-space:nowrap; transition:0.3s; border:1px solid transparent; }
 .top-nav .nav-link:hover { background:#f1f5f9; transform:translateY(-1px); }
-.top-nav .nav-link.active { background:#0ea5e9; color:#fff; box-shadow:0 4px 12px rgba(14,165,233,0.3); animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{ box-shadow:0 4px 12px rgba(14,165,233,0.3);} 50%{ box-shadow:0 6px 20px rgba(14,165,233,0.5);} }
-.icon-btn { width:36px; height:36px; background:#f1f5f9; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; color:#0f172a; font-size:15px; transition:0.3s; border:1px solid #e2e8f0; cursor:pointer; }
-.icon-btn:hover { transform:scale(1.1) rotate(5deg); background:#0f172a; color:#fff; }
-
-/* --- FIXED DROPDOWN CSS --- */
+.top-nav .nav-link.active { background:#0ea5e9; color:#fff; box-shadow:0 4px 12px rgba(14,165,233,0.3); }
+.icon-btn { width:40px; height:40px; background:#f1f5f9; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; color:#0f172a; font-size:15px; transition:0.3s; border:1px solid #e2e8f0; cursor:pointer; }
 .profile-wrap{position:relative; z-index:200;}
-.profile-btn-main{width:36px;height:36px;background:#0f172a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;border:2px solid #e2e8f0;transition:0.3s}
-.profile-btn-main:hover{transform:scale(1.1)}
-.profile-dropdown{position:absolute;right:0;top:48px;background:#fff;width:270px;border-radius:16px;box-shadow:0 15px 40px rgba(0,0,0,0.18);border:1px solid #e2e8f0;display:none;z-index:1000;overflow:hidden; max-height:85vh; overflow-y:auto;}
+.profile-btn-main{width:40px;height:40px;background:#0f172a;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;border:2px solid #e2e8f0;transition:0.3s}
+.profile-dropdown{position:absolute;right:0;top:52px;background:#fff;width:270px;border-radius:16px;box-shadow:0 15px 40px rgba(0,0,0,0.18);border:1px solid #e2e8f0;display:none;z-index:1001;overflow:hidden; max-height:85vh; overflow-y:auto;}
 .profile-dropdown.show{display:block;animation:dropAnim 0.25s ease}
 @keyframes dropAnim{from{opacity:0;transform:translateY(-12px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 .drop-header{padding:14px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
-.drop-item{padding:12px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;color:#0f172a;font-size:13.5px;font-weight:500;transition:0.2s;cursor:pointer; width:100%; border:none; background:transparent; text-align:left;}
-.drop-item:hover{background:#f1f5f9;padding-left:20px}
+.drop-item{padding:13px 16px;display:flex;align-items:center;gap:12px;text-decoration:none;color:#0f172a;font-size:14px;font-weight:500;transition:0.2s;cursor:pointer; width:100%; border:none; background:transparent; text-align:left; min-height:44px;}
+.drop-item:hover{background:#f1f5f9;}
 .drop-divider{height:1px;background:#e2e8f0;margin:6px 0}
 .drop-label{padding:8px 16px 4px;font-size:10.5px;color:#94a3b8;font-weight:800;letter-spacing:1px}
 .sub-menu{display:none;background:#f8fafc;padding:6px 0; border-top:1px solid #e2e8f0;}
 .sub-menu.show{display:block}
 .sub-menu .drop-item{padding-left:44px;}
-
-.hero { background: linear-gradient(120deg, #020617, #1e3a8a, #2563eb, #0ea5e9); background-size:300% 300%; animation:gradientMove 8s ease infinite; color:#fff; text-align:center; padding:50px 20px 60px; position:relative; overflow:hidden; }
-@keyframes gradientMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-.hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size:40px 40px; animation:stars 20s linear infinite; }
-@keyframes stars { from{transform:translateY(0)} to{transform:translateY(40px)} }
-.hero h1 { font-size:34px; font-weight:900; margin-bottom:8px; position:relative; animation:floatText 3s ease-in-out infinite; letter-spacing:-1px; }
-@keyframes floatText { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-.hero h1 span { display:inline-block; animation:bolt 1.5s ease infinite; }
-@keyframes bolt { 0%,100%{transform:scale(1) rotate(0deg)} 50%{transform:scale(1.2) rotate(10deg)} }
-.hero p { opacity:0.9; font-size:14px; margin-bottom:20px; position:relative; animation:fadeIn 1s ease; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:0.9; transform:translateY(0)} }
-.hero-search { max-width:440px; margin:0 auto; display:flex; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-radius:28px; padding:5px; box-shadow:0 10px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.3) inset; position:relative; transition:0.3s; }
-.hero-search:focus-within { transform:scale(1.03); box-shadow:0 15px 40px rgba(0,0,0,0.25); }
-.hero-search input { flex:1; border:none; padding:12px 18px; border-radius:28px; outline:none; font-size:14px; background:transparent; }
-.hero-search button { background:linear-gradient(135deg, #0ea5e9, #2563eb); color:#fff; border:none; padding:11px 22px; border-radius:22px; font-weight:800; cursor:pointer; transition:0.3s; box-shadow:0 4px 12px rgba(14,165,233,0.4); }
-.hero-search button:hover { transform:scale(1.05); box-shadow:0 6px 18px rgba(14,165,233,0.6); }
-
+.hero { background: linear-gradient(120deg, #020617, #1e3a8a, #2563eb, #0ea5e9); color:#fff; text-align:center; padding:50px 20px 60px; position:relative; overflow:hidden; }
+.hero h1 { font-size:34px; font-weight:900; margin-bottom:8px; position:relative; letter-spacing:-1px; }
+.hero p { opacity:0.9; font-size:14px; margin-bottom:20px; position:relative; }
+.hero-search { max-width:440px; margin:0 auto; display:flex; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-radius:28px; padding:5px; box-shadow:0 10px 30px rgba(0,0,0,0.2); position:relative; }
+.hero-search input { flex:1; border:none; padding:12px 18px; border-radius:28px; outline:none; font-size:15px; background:transparent; }
+.hero-search button { background:linear-gradient(135deg, #0ea5e9, #2563eb); color:#fff; border:none; padding:11px 22px; border-radius:22px; font-weight:800; cursor:pointer; min-height:44px; }
 .section { max-width:1220px; margin:0 auto; padding:24px 20px; }
 .section h3 { font-size:20px; font-weight:800; display:flex; align-items:center; gap:8px; }
-.section h3::after { content:''; height:3px; flex:1; max-width:60px; background:linear-gradient(90deg, #0ea5e9, transparent); border-radius:3px; margin-left:8px; }
-.product-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; margin-top:18px; }
-.product-card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:12px; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); position:relative; overflow:hidden; }
-.product-card::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); transition:0.6s; }
-.product-card:hover::before { left:100%; }
-.product-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 12px 30px rgba(37,99,235,0.15); border-color:#93c5fd; }
-.product-card img { width:100%; height:170px; object-fit:contain; background:#fff; border-radius:12px; transition:0.4s; }
-.product-card:hover img { transform:scale(1.08); }
+.product-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; margin-top:18px; width:100%; box-sizing:border-box; }
+.product-card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:12px; transition:0.3s; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; height:100%; content-visibility:auto; }
+.product-card:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(37,99,235,0.15); }
+.product-card img { width:100% !important; max-width:100%; height:170px; object-fit:contain; background:#fff; border-radius:12px; }
 .product-card h4 { font-size:14px; margin:10px 0 4px; color:#0f172a; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .product-card .price { font-size:13px; color:#64748b; display:flex; justify-content:space-between; align-items:center; }
 .product-card .price b { color:#0f172a; background:#f1f5f9; padding:3px 8px; border-radius:6px; font-size:12px; }
-.badge-new { position:absolute; top:10px; left:10px; background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; animation:blink 1.5s infinite; }
+.badge-new { position:absolute; top:10px; left:10px; background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; }
 .badge-low { position:absolute; top:10px; right:10px; background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:3px 7px; border-radius:6px; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.7} }
-@media(max-width:900px){ .product-grid{ grid-template-columns:repeat(2, 1fr); gap:12px;} .hero h1{ font-size:26px; } }
 
-/* --- OUTLET FIX ORIGINAL JAISA - ADDED ONLY THIS PART --- */
-.product-grid { width:100%; box-sizing:border-box; }
-.product-card { display:flex; flex-direction:column; justify-content:space-between; height:100%; }
-.product-card img { width:100% !important; max-width:100%; }
-.section { width:100%; box-sizing:border-box; overflow:hidden; }
+/* ✅ FINAL APP FIX - 100% WORKING */
+@media(max-width:900px){ .product-grid{ grid-template-columns:repeat(2, 1fr); gap:12px;} .hero h1{ font-size:26px; } }
+@media(max-width:768px){
+  html { padding-top: env(safe-area-inset-top, 0px); }
+  body { padding-top: 0px; }
+  body::before{
+    content:"";
+    position:fixed;
+    top:0; left:0; right:0;
+    height: env(safe-area-inset-top, 35px);
+    background:#ffffff;
+    z-index:999;
+  }
+  .top-nav{
+    top: env(safe-area-inset-top, 35px) !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
 @media(max-width:600px){
   .section { padding:14px 10px; }
   .product-grid { gap:10px; }
   .product-card { padding:8px; border-radius:12px; }
   .product-card img { height:135px !important; }
-  .product-card h4 { font-size:12.5px; }
-  .product-card .price { font-size:11.5px; }
   .top-nav { padding:8px 10px; }
   .top-nav .logo { font-size:17px; }
   .hero { padding:30px 12px 36px; }
@@ -108,7 +96,6 @@ body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color
   </div>
   <div style="display:flex; gap:10px; align-items:center;">
     <a href="/cart" class="icon-btn">🛒 {{ cart_count }}</a>
-
     <div class="profile-wrap">
       <div class="profile-btn-main" onclick="toggleProfile(event)">👤</div>
       <div id="profileDrop" class="profile-dropdown">
@@ -121,7 +108,6 @@ body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color
           <a href="/cart" class="drop-item">🛒 Cart</a>
           <a href="/my-orders" class="drop-item">📦 Orders</a>
           <a href="/settings" class="drop-item">✏️ Edit Profile</a>
-
           <div class="drop-divider"></div>
           <div class="drop-label">SETTINGS</div>
           <button class="drop-item" onclick="toggleSub(event)">⚙️ Settings ▾</button>
@@ -131,7 +117,6 @@ body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color
             <a href="/change-password" class="drop-item">🔑 Change Password</a>
             <a href="/my-orders" class="drop-item">📜 Order History</a>
           </div>
-
           <div class="drop-divider"></div>
           <a href="/logout" class="drop-item" style="color:#ef4444">🚪 Log Out</a>
         {% else %}
@@ -160,19 +145,18 @@ body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color
   <h3>✨ {% if selected_cat %}{{ selected_cat }}{% else %}All Products{% endif %} {% if query %} - "{{ query }}"{% endif %}</h3>
   <div class="product-grid">
     {% for p in products %}
-    <div class="product-card" style="animation:fadeUp 0.5s ease {{ loop.index * 0.05 }}s both; {% if p['stock'] <=5 %}border:1.5px solid #fca5a5{% endif %}">
+    <div class="product-card">
       {% if p['stock'] <=5 %}<div class="badge-low">LOW STOCK</div>{% else %}<div class="badge-new">NEW</div>{% endif %}
       <a href="/product/{{ p['id'] }}" style="text-decoration:none; color:inherit;">
         {% if p['image'] %}
-        <img src="{{ url_for('static', filename='uploads/' + p['image']) }}">
+        <img src="{{ url_for('static', filename='uploads/' + p['image']) }}" loading="lazy">
         {% else %}
         <div style="height:170px; background:linear-gradient(135deg, #f1f5f9, #e2e8f0); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:32px;">💡</div>
         {% endif %}
         <h4>{{ p['name'] }}</h4>
         <div class="price"><span>Stock: {% if p['stock'] <=5 %}<b style="color:#dc2626">{{ p['stock'] }}</b>{% else %}{{ p['stock'] }}{% endif %}</span><b>₹{{ p['price']|int }}</b></div>
       </a>
-      <!-- PAPA KI SHOP - WHATSAPP BUTTON (CUSTOMER DIRECT PUCHEGA) -->
-      <a href="https://wa.me/919667311958?text=Hi%20Bhaiya,%20{{ p['name']|urlencode }}%20available%20hai%20kya?%20Price%20{{ p['price']|int }}%20-%20{{ p['category']|urlencode }}" target="_blank" style="display:block;text-align:center;background:#dcfce7;color:#166534;padding:6px 8px;border-radius:20px;font-size:11px;font-weight:700;text-decoration:none;margin-top:8px;border:1px solid #bbf7d0">💬 WhatsApp Puchho</a>
+      <a href="https://wa.me/919667311958?text=Hi%20Bhaiya,%20{{ p['name']|urlencode }}%20available%20hai%20kya?%20Price%20{{ p['price']|int }}%20-%20{{ p['category']|urlencode }}" target="_blank" style="display:block;text-align:center;background:#dcfce7;color:#166534;padding:9px 8px;border-radius:20px;font-size:12px;font-weight:700;text-decoration:none;margin-top:8px;border:1px solid #bbf7d0; min-height:36px;">💬 WhatsApp Puchho</a>
     </div>
     {% endfor %}
   </div>
@@ -195,11 +179,9 @@ function setTheme(t){
   if(t=='dark'){
     document.body.style.background='#020617';
     document.body.style.color='#fff';
-    document.querySelectorAll('.product-card').forEach(c=>c.style.background='#1e293b');
   } else {
     document.body.style.background='#f8fafc';
     document.body.style.color='#0f172a';
-    document.querySelectorAll('.product-card').forEach(c=>c.style.background='#fff');
   }
 }
 document.addEventListener('click', function(e){
@@ -211,18 +193,12 @@ document.addEventListener('click', function(e){
 });
 if(localStorage.getItem('em_theme')=='dark'){ setTheme('dark'); }
 </script>
-
-<!-- ✅ PWA Service Worker - Bamarara App Install ke liye -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
-      .then(reg => console.log("✅ PWA Ready - Bamarara Electronics App Install ho sakta hai", reg.scope))
-      .catch(err => console.log("PWA Failed", err));
+      navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");
     });
   }
 </script>
-
-<style>@keyframes fadeUp { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }</style>
 </body>
 </html>
