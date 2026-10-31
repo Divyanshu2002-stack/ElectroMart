@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ElectroMart - Dehradun</title>
+
+<!-- ✅ PWA - Bamarara Electronics App ke liye -->
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icon-192.png') }}">
+
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
 body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color 0.3s; }
@@ -204,6 +210,17 @@ document.addEventListener('click', function(e){
   }
 });
 if(localStorage.getItem('em_theme')=='dark'){ setTheme('dark'); }
+</script>
+
+<!-- ✅ PWA Service Worker - Bamarara App Install ke liye -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}")
+      .then(reg => console.log("✅ PWA Ready - Bamarara Electronics App Install ho sakta hai", reg.scope))
+      .catch(err => console.log("PWA Failed", err));
+    });
+  }
 </script>
 
 <style>@keyframes fadeUp { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:translateY(0)} }</style>
