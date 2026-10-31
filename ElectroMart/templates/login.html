@@ -1,1 +1,73 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Login</title><style>body{font-family:sans-serif;background:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh}.card{background:#fff;padding:28px;border-radius:16px;width:90%;max-width:400px}input{width:100%;padding:12px;border-radius:10px;border:1px solid #cbd5e1;margin:8px 0}button{width:100%;padding:12px;background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:700}</style></head><body><div class="card"><h2>Login</h2><form method="POST"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="text" name="identity" placeholder="Username" required><input type="password" name="password" placeholder="Password" required><button>Login</button></form><p><a href="/register">Create Account</a></p></div></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% if owner_login %}Admin Login{% else %}User Login{% endif %} - ElectroMart</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,'Segoe UI',sans-serif}
+body{background:linear-gradient(120deg,#020617,#1e3a8a,#2563eb);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:15px}
+.login-box{background:#fff;width:100%;max-width:380px;border-radius:20px;padding:28px 22px;box-shadow:0 15px 40px rgba(0,0,0,0.25)}
+.login-box h2{text-align:center;font-weight:900;font-size:22px;color:#0f172a;margin-bottom:4px}
+.login-box p.sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:18px}
+.login-box label{font-size:12px;font-weight:700;color:#475569;display:block;margin:12px 0 5px}
+.login-box input{width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:12px;outline:none;font-size:14px;transition:0.2s}
+.login-box input:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,0.15)}
+.btn-login{width:100%;margin-top:16px;background:linear-gradient(135deg,#0ea5e9,#2563eb);color:#fff;border:none;padding:13px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,0.3);transition:0.2s}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 10px 25px rgba(37,99,235,0.4)}
+.links{display:flex;justify-content:space-between;margin-top:14px;font-size:12.5px}
+.links a{color:#2563eb;text-decoration:none;font-weight:600}
+.links a:hover{text-decoration:underline}
+.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;margin:0 auto 12px;text-align:center}
+.badge-admin{background:#0f172a;color:#fff}
+.badge-user{background:#dbeafe;color:#1e40af}
+.flash{padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:12px}
+.flash.error{background:#fee2e2;color:#dc2626;border:1px solid #fecaca}
+.flash.success{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+</style>
+</head>
+<body>
+<div class="login-box">
+  <div style="text-align:center">
+    {% if owner_login %}
+      <span class="badge badge-admin">👑 ADMIN LOGIN</span>
+      <h2>ElectroMart Admin</h2>
+      <p class="sub">Papa ki shop - Owner only</p>
+    {% else %}
+      <span class="badge badge-user">🔑 USER LOGIN</span>
+      <h2>Welcome Back</h2>
+      <p class="sub">Login to buy electrical products</p>
+    {% endif %}
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username or Email</label>
+    <input type="text" name="identity" placeholder="admin / email" required autofocus>
+
+    <label>Password</label>
+    <input type="password" name="password" placeholder="••••••••" required>
+
+    <button type="submit" class="btn-login">{% if owner_login %}Login as Admin →{% else %}Login →{% endif %}</button>
+  </form>
+
+  <div class="links">
+    {% if owner_login %}
+      <a href="/login">← User Login</a>
+      <a href="/">Home</a>
+    {% else %}
+      <a href="/owner/login">Admin Login</a>
+      <a href="/register">Create Account</a>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>
