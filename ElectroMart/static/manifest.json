@@ -1,11 +1,14 @@
 {
   "name": "Bamarara Electronics",
   "short_name": "Bamarara",
+  "description": "Bamarara Electronics - Best Electricals, Wires, Lights, Fans and Home Appliances in Dehradun",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a2c5a",
-  "theme_color": "#1a2c5a",
+  "orientation": "any",
+  "background_color": "#0a1931",
+  "theme_color": "#0a1931",
   "id": "/",
+  "categories": ["shopping", "electronics"],
   "icons": [
     {
       "src": "/static/icon-192.png",
