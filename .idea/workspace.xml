@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f3342f-552d-486e-8fad-0eac9293c269" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ElectroMart/static/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ElectroMart/static/service-worker.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/static/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/admin_settings_html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/admin_settings_html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

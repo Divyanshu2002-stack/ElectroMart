@@ -46,6 +46,7 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )""")
+        db.execute("""CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)""")
         for col in ["address TEXT DEFAULT ''", "delivery_charge REAL DEFAULT 0", "pincode TEXT DEFAULT ''",
                     "payment_method TEXT DEFAULT 'COD'", "payment_screenshot TEXT DEFAULT ''",
                     "payment_status TEXT DEFAULT 'Pending'"]:
@@ -63,7 +64,35 @@ def init_db():
                     ("Copper Wire Roll", "Wires & Cables", 650, 500, "1.5mm Copper Wire", 20, ""),
                     ("Ceiling Fan", "Fans & Coolers", 1850, 1500, "High Speed Fan", 10, "")
                 ])
+        defaults = {
+            "store_name": "ElectroMart",
+            "owner_display_name": "ElectroMart Owner - 9667311958@ybl",
+            "upi_id": UPI_ID,
+            "upi_name": UPI_NAME,
+            "free_delivery_limit": str(FREE_DELIVERY_LIMIT),
+            "delivery_charge": str(DELIVERY_CHARGE),
+            "allowed_pincodes": ",".join(ALLOWED_PINCODES),
+            "qr_image": ""
+        }
+        for k,v in defaults.items():
+            db.execute("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)", (k,v))
         db.commit()
+
+def get_setting(key, default=""):
+    try:
+        with get_db() as db:
+            r = db.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+            return r["value"] if r else default
+    except:
+        return default
+
+def get_all_settings():
+    try:
+        with get_db() as db:
+            rows = db.execute("SELECT * FROM settings").fetchall()
+            return {r["key"]: r["value"] for r in rows}
+    except:
+        return {}
 
 def csrf_token():
     if "_csrf_token" not in session: session["_csrf_token"] = secrets.token_urlsafe(32)
@@ -161,15 +190,21 @@ def checkout_page():
         for pid, qty in cart_data.items():
             p = db.execute("SELECT * FROM products WHERE id=?", (pid,)).fetchone()
             if p: cart_items.append({'product': p, 'qty': qty, 'subtotal': p['price'] * qty}); total += p['price'] * qty
-    delivery_charge = 0 if total >= FREE_DELIVERY_LIMIT else DELIVERY_CHARGE; final_total = total + delivery_charge
-    return render_template("checkout.html", cart_items=cart_items, total=total, delivery_charge=delivery_charge, final_total=final_total, allowed_pincodes=ALLOWED_PINCODES, upi_id=UPI_ID, upi_name=UPI_NAME)
+    free_limit = float(get_setting("free_delivery_limit", str(FREE_DELIVERY_LIMIT)))
+    del_charge = float(get_setting("delivery_charge", str(DELIVERY_CHARGE)))
+    upi_id = get_setting("upi_id", UPI_ID)
+    upi_name = get_setting("upi_name", UPI_NAME)
+    allowed = get_setting("allowed_pincodes", ",".join(ALLOWED_PINCODES)).split(",")
+    delivery_charge = 0 if total >= free_limit else del_charge; final_total = total + delivery_charge
+    return render_template("checkout.html", cart_items=cart_items, total=total, delivery_charge=delivery_charge, final_total=final_total, allowed_pincodes=allowed, upi_id=upi_id, upi_name=upi_name, global_settings=get_all_settings())
 
 @app.route("/checkout", methods=["POST"])
 @login_required
 def checkout():
     validate_csrf(); address = request.form.get("address", "").strip(); pincode = request.form.get("pincode", "").strip(); payment_method = request.form.get("payment_method", "COD").strip()
+    allowed = get_setting("allowed_pincodes", ",".join(ALLOWED_PINCODES)).split(",")
     if len(address) < 10: flash("Full address likho bhai!", "error"); return redirect(url_for("checkout_page"))
-    if pincode not in ALLOWED_PINCODES: flash(f"❌ {pincode} pe delivery nahi hai.", "error"); return redirect(url_for("checkout_page"))
+    if pincode not in allowed: flash(f"❌ {pincode} pe delivery nahi hai.", "error"); return redirect(url_for("checkout_page"))
     cart_data = session.get('cart', {})
     if not cart_data: flash("Cart empty", "error"); return redirect(url_for("cart"))
     with get_db() as db:
@@ -177,7 +212,9 @@ def checkout():
         for pid, qty in cart_data.items():
             p = db.execute("SELECT * FROM products WHERE id=?", (pid,)).fetchone()
             if p: total_cart += p['price'] * qty
-        delivery_charge = 0 if total_cart >= FREE_DELIVERY_LIMIT else DELIVERY_CHARGE
+        free_limit = float(get_setting("free_delivery_limit", str(FREE_DELIVERY_LIMIT)))
+        del_charge = float(get_setting("delivery_charge", str(DELIVERY_CHARGE)))
+        delivery_charge = 0 if total_cart >= free_limit else del_charge
         screenshot_filename = ""
         if payment_method == "UPI":
             file = request.files.get("payment_screenshot")
@@ -195,7 +232,7 @@ def checkout():
             else: flash(f"Out of stock!", "error"); return redirect(url_for("cart"))
         db.commit()
     session['cart'] = {}
-    if payment_method == "UPI": flash(f"✅ UPI Screenshot Received! Bank of Baroda (9667311958@ybl) check karke bhej denge. ₹{int(total_cart+delivery_charge)}", "success")
+    if payment_method == "UPI": flash(f"✅ UPI Screenshot Received! Bank of Baroda ({get_setting('upi_id',UPI_ID)}) check karke bhej denge. ₹{int(total_cart+delivery_charge)}", "success")
     else: flash(f"Order Placed! COD ₹{int(total_cart+delivery_charge)}", "success")
     return redirect(url_for("my_orders"))
 
@@ -271,7 +308,6 @@ def change_password():
             else: db.execute("UPDATE users SET password_hash=? WHERE id=?", (generate_password_hash(new), session['user_id'])); flash("Password change ho gaya!", "success"); return redirect(url_for("settings"))
     return render_template("change_password.html")
 
-# --- NEW OWNER PASSWORD CHANGE ---
 @app.route("/owner/change-password", methods=["GET", "POST"])
 @owner_required
 def owner_change_password():
@@ -527,6 +563,65 @@ def khata_print_bill(khata_id):
     if not k: abort(404)
     return render_template("bill_print.html", k=k, type="khata")
 
+@app.route('/owner/settings', methods=["GET", "POST"])
+@owner_required
+def owner_settings():
+    with get_db() as db:
+        owner = db.execute("SELECT * FROM users WHERE id=?", (session['user_id'],)).fetchone()
+    settings_dict = get_all_settings()
+    class S: pass
+    s = S()
+    s.store_name = settings_dict.get("store_name","ElectroMart")
+    s.owner_display_name = settings_dict.get("owner_display_name","ElectroMart Owner - 9667311958@ybl")
+    s.upi_id = settings_dict.get("upi_id",UPI_ID)
+    s.upi_name = settings_dict.get("upi_name",UPI_NAME)
+    s.free_delivery_limit = settings_dict.get("free_delivery_limit",str(FREE_DELIVERY_LIMIT))
+    s.delivery_charge = settings_dict.get("delivery_charge",str(DELIVERY_CHARGE))
+    s.allowed_pincodes = settings_dict.get("allowed_pincodes",",".join(ALLOWED_PINCODES))
+    s.qr_image = settings_dict.get("qr_image","")
+    if request.method == "POST":
+        validate_csrf()
+        new_username = request.form.get("admin_username","").strip()
+        new_email = request.form.get("admin_email","").strip().lower()
+        new_pass = request.form.get("new_password","").strip()
+        confirm_pass = request.form.get("confirm_password","").strip()
+        with get_db() as db:
+            if new_username and new_email:
+                db.execute("UPDATE users SET username=?, email=? WHERE id=?", (new_username, new_email, session['user_id']))
+                session["username"] = new_username
+                session["email"] = new_email
+            if new_pass:
+                if len(new_pass) < 8:
+                    flash("Password 8 chars se kam hai!", "error")
+                    return redirect(url_for("owner_settings"))
+                if new_pass != confirm_pass:
+                    flash("Password match nahi!", "error")
+                    return redirect(url_for("owner_settings"))
+                db.execute("UPDATE users SET password_hash=? WHERE id=?", (generate_password_hash(new_pass), session['user_id']))
+                flash("Admin Password Change Ho Gaya!", "success")
+            updates = {
+                "store_name": request.form.get("store_name",""),
+                "owner_display_name": request.form.get("owner_display_name",""),
+                "upi_id": request.form.get("upi_id",""),
+                "upi_name": request.form.get("upi_name",""),
+                "free_delivery_limit": request.form.get("free_delivery","500"),
+                "delivery_charge": request.form.get("delivery_charge","40"),
+                "allowed_pincodes": request.form.get("allowed_pincodes","")
+            }
+            for k,v in updates.items():
+                db.execute("INSERT OR REPLACE INTO settings (key,value) VALUES (?,?)", (k,v))
+            qr = request.files.get("qr_image")
+            if qr and qr.filename:
+                ext = qr.filename.rsplit(".",1)[-1].lower()
+                if ext in ["jpg","jpeg","png","webp"]:
+                    fname = "qr_" + secrets.token_hex(6) + "." + ext
+                    qr.save(UPLOAD_FOLDER / fname)
+                    db.execute("INSERT OR REPLACE INTO settings (key,value) VALUES (?,?)", ("qr_image", fname))
+            db.commit()
+        flash("✅ Full Settings Saved! Pura Control Update Ho Gaya!", "success")
+        return redirect(url_for("owner_settings"))
+    return render_template("admin_settings.html", owner=owner, s=s)
+
 @app.route('/account')
 def account_choice():
     return render_template('account_choice.html')
@@ -536,6 +631,13 @@ def set_theme(theme):
     session['theme'] = theme
     flash(f"Theme changed to {theme}!", "success")
     return redirect(request.referrer or url_for('home'))
+
+@app.context_processor
+def inject_settings():
+    try:
+        return dict(global_settings=get_all_settings())
+    except:
+        return dict(global_settings={})
 
 init_db()
 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Admin Settings - Full Control</title>
+<style>
+body{font-family:system-ui;background:#f1f5f9;padding:0;margin:0}
+.navbar{background:white;padding:12px 20px;display:flex;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.card{max-width:900px;margin:20px auto;background:white;padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+h2{margin-top:30px;border-bottom:2px solid #e2e8f0;padding-bottom:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input,textarea,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:10px}
+button{padding:12px 20px;background:#0f172a;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer}
+label{font-size:13px;font-weight:600;color:#334155}
+.badge{background:#dcfce7;color:#15803d;padding:4px 10px;border-radius:20px;font-size:11px}
+</style>
+</head><body>
+<div class="navbar"><b>⚙️ Admin Full Control Settings</b><a href="/owner" style="text-decoration:none;background:#0f172a;color:white;padding:6px 12px;border-radius:20px">← Owner Dashboard</a></div>
+
+<div class="card">
+<form method="POST" enctype="multipart/form-data">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<h2>👤 1. Admin Account Details</h2>
+<div class="grid">
+<div><label>Admin Username</label><input type="text" name="admin_username" value="{{ owner.username }}"></div>
+<div><label>Admin Email</label><input type="email" name="admin_email" value="{{ owner.email }}"></div>
+<div><label>New Password (Khali chhodo agar change nahi karna)</label><input type="password" name="new_password" placeholder="Naya Password 8+ chars"></div>
+<div><label>Confirm New Password</label><input type="password" name="confirm_password" placeholder="Confirm"></div>
+</div>
+
+<h2>🏪 2. Store / User Dashboard Control</h2>
+<div class="grid">
+<div><label>Store Name (User Dashboard pe dikhega)</label><input type="text" name="store_name" value="{{ s.store_name }}"></div>
+<div><label>Owner Display Name (Logo me)</label><input type="text" name="owner_display_name" value="{{ s.owner_display_name }}"></div>
+<div><label>Free Delivery Limit (₹)</label><input type="number" name="free_delivery" value="{{ s.free_delivery_limit }}"></div>
+<div><label>Delivery Charge (₹)</label><input type="number" name="delivery_charge" value="{{ s.delivery_charge }}"></div>
+</div>
+<label style="margin-top:10px;display:block">Allowed Pincodes (comma se alag likho - 248001,248002...)</label>
+<textarea name="allowed_pincodes" rows="2">{{ s.allowed_pincodes }}</textarea>
+
+<h2>💸 3. UPI Payment & QR Code Control</h2>
+<div class="grid">
+<div><label>UPI ID</label><input type="text" name="upi_id" value="{{ s.upi_id }}"></div>
+<div><label>UPI Name (Bank Name)</label><input type="text" name="upi_name" value="{{ s.upi_name }}"></div>
+</div>
+<div style="margin-top:12px">
+<label>QR Code Image (UPI QR Upload karo) - Current:</label><br>
+{% if s.qr_image %}<img src="{{ url_for('static', filename='uploads/' + s.qr_image) }}" style="width:150px;border-radius:12px;border:1px solid #e2e8f0;margin:8px 0">{% endif %}<br>
+<input type="file" name="qr_image" accept="image/*">
+</div>
+
+<h2>🔐 4. Security</h2>
+<p style="font-size:13px;color:#64748b">Password change ke liye upar Admin section me naya password daalo. Purana password auto verify ho jayega session se kyunki tum Owner ho.</p>
+
+<button type="submit" style="width:100%;margin-top:20px;padding:14px;font-size:16px">💾 Save All Settings - Full Control Update 🚀</button>
+</form>
+</div>
+</body></html>
