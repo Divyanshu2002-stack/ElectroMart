@@ -1,205 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owner Dashboard | ElectroMart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<header class="navbar">
-    <a class="brand" href="{{ url_for('home') }}">⚡ ElectroMart</a>
-    <nav>
-        <a href="{{ url_for('home') }}" target="_blank">View shop ↗</a>
-        <form method="POST" action="{{ url_for('logout') }}" class="inline-form">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button class="owner-link" type="submit">Log out</button>
-        </form>
-    </nav>
-</header>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Owner Dashboard</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body><header class="navbar"><div class="logo"><a href="/">⚡ ElectroMart Owner - 9667311958@ybl</a></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a href="/owner/khata" style="background:#dc2626;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">📒 Khata Book {% if khata_total and khata_total['c'] >0 %}({{ khata_total['c'] }}){% endif %}</a><a href="/owner/report" style="background:#0ea5e9;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">📊 Report</a><a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">🧾 Quick Bill</a><a href="/" class="login-btn">View Site</a></div></header><main style="padding:24px;max-width:1100px;margin:0 auto">
 
-<main class="admin-container">
-    <div class="admin-heading">
-        <div>
-            <span class="eyebrow">OWNER CONTROL PANEL</span>
-            <h1>Manage your shop</h1>
-            <p>Change product prices, details, photos, PDFs and videos.</p>
-        </div>
-        <div class="admin-count">{{ products|length }} products</div>
-    </div>
+{% if khata_total and khata_total['t'] %}
+<div style="background:#fef2f2;border:2px solid #fecaca;padding:14px 16px;border-radius:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<span style="color:#dc2626;font-weight:800">📒 Khata Me Udhar: ₹{{ khata_total['t']|int }} | {{ khata_total['c'] }} log se lena hai</span>
+<a href="/owner/khata?status=Udhar" style="background:#dc2626;color:white;padding:6px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">🔴 Udhar Wale Dekho</a>
+</div>
+{% endif %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-        <div class="flash {{ category }}">{{ message }}</div>
-        {% endfor %}
-    {% endwith %}
+{% if low_stock and low_stock|length > 0 %}
+<div style="background:#fef2f2;border:2px solid #fecaca;padding:16px;border-radius:16px;margin-bottom:24px">
+<h3 style="color:#dc2626;margin:0 0 8px 0">⚠️ Low Stock Alert - Market se laana hai ({{ low_stock|length }})</h3>
+{% for p in low_stock %}<span style="display:inline-block;background:white;border:1px solid #fecaca;padding:5px 12px;border-radius:20px;margin:4px;font-size:12px;font-weight:600">{{ p['name'] }} - Sirf {{ p['stock'] }} bacha</span>{% endfor %}
+</div>
+{% endif %}
 
-    <section class="admin-panel">
-        <h2>＋ Add a new product</h2>
-        <form class="product-form" method="POST"
-              action="{{ url_for('add_product') }}" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<h2>👑 Add Product - Photo & Video</h2><form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data" style="background:white;padding:20px;border-radius:16px;display:grid;gap:12px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.05)"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="text" name="name" placeholder="Product Name ex: Inverter Pipe 1 inch" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><select name="category" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0">{% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select><input type="number" name="stock" placeholder="Stock Quantity" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input type="number" step="0.01" name="cost_price" placeholder="Kharid Daam ₹ (Cost)" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#f0fdf4"><input type="number" step="0.01" name="price" placeholder="Bechne ka Daam ₹ (Selling)" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#fffbeb"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label style="background:#f0f9ff;padding:12px;border-radius:10px;border:2px dashed #0ea5e9;text-align:center;cursor:pointer;font-weight:600">📸 Photo<input type="file" name="photo" accept="image/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label><label style="background:#fdf2f8;padding:12px;border-radius:10px;border:2px dashed #ec4899;text-align:center;cursor:pointer;font-weight:600">🎥 Video<input type="file" name="video" accept="video/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label></div><textarea name="description" placeholder="Product Description" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"></textarea><button type="submit" style="padding:14px;background:linear-gradient(90deg,#0ea5e9,#6366f1);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer">Add Product 🚀</button></form>
 
-            <div class="form-grid">
-                <div>
-                    <label>Product name *</label>
-                    <input name="name" required maxlength="150"
-                           placeholder="e.g. LED Bulb 12W">
-                </div>
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h2 style="margin:0">📦 All Products ({{ products|length }})</h2><div style="display:flex;gap:6px;flex-wrap:wrap">{% for c in categories %}<a href="/owner?category={{ c }}" style="padding:6px 12px;background:{% if selected_cat==c %}#0f172a{% else %}white{% endif %};color:{% if selected_cat==c %}white{% else %}#334155{% endif %};border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700">{{ c }}</a>{% endfor %}<a href="/owner" style="padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700;color:#334155">All</a></div></div>
 
-                <div>
-                    <label>Category *</label>
-                    <select name="category" required>
-                        {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+<div class="product-grid">{% for p in products %}<div class="product-card" style="background:white;padding:12px;border-radius:16px;border:{% if p['stock'] <=5 %}2px solid #dc2626{% else %}1px solid #e2e8f0{% endif %};position:relative">{% if p['stock'] <=5 %}<span style="position:absolute;top:8px;right:8px;background:#dc2626;color:white;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700">LOW</span>{% endif %}{% if p['image'] %}<img src="{{ url_for('static', filename='uploads/' + p['image']) }}" style="width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:8px">{% endif %}{% if p['video'] %}<video src="{{ url_for('static', filename='uploads/' + p['video']) }}" style="width:100%;height:140px;border-radius:12px" controls></video>{% endif %}<h3 style="margin:6px 0">{{ p['name'] }}</h3><p style="font-size:12px;color:#475569;margin:0">{{ p['category'] }}</p><p style="margin:6px 0;font-size:13px;line-height:1.4">Bechne: <b>₹{{ p['price'] }}</b>{% if p['cost_price'] %}<br>Kharid: ₹{{ p['cost_price'] }} | <span style="color:#16a34a;font-weight:700">Profit ₹{{ (p['price'] - p['cost_price'])|int }}</span>{% endif %}<br>Stock: <b style="{% if p['stock'] <=5 %}color:#dc2626{% endif %}">{{ p['stock'] }}</b></p><div style="display:flex;gap:8px;margin-top:10px"><a href="/owner/edit/{{ p['id'] }}" style="flex:1;background:#dbeafe;color:#1e40af;text-align:center;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">✏️ Edit</a><form method="POST" action="{{ url_for('delete_product', product_id=p['id']) }}" style="flex:1"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button style="width:100%;background:#fee2e2;color:#dc2626;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600">Delete</button></form></div></div>{% endfor %}</div>
 
-                <div>
-                    <label>Price in ₹ *</label>
-                    <input name="price" type="number" min="0" step="0.01" required>
-                </div>
-
-                <div>
-                    <label>Stock quantity *</label>
-                    <input name="stock" type="number" min="0" step="1"
-                           value="1" required>
-                </div>
-
-                <div class="wide">
-                    <label>Description</label>
-                    <textarea name="description" rows="3" maxlength="2000"
-                              placeholder="Product details and specifications"></textarea>
-                </div>
-
-                <div>
-                    <label>Product photo (JPG, PNG, WebP, GIF)</label>
-                    <input name="image" type="file"
-                           accept=".jpg,.jpeg,.png,.webp,.gif">
-                </div>
-
-                <div>
-                    <label>Product PDF document</label>
-                    <input name="document" type="file" accept=".pdf">
-                </div>
-
-                <div class="wide">
-                    <label>Product video (MP4 or WebM)</label>
-                    <input name="video" type="file" accept=".mp4,.webm">
-                </div>
-            </div>
-
-            <p class="help-text">
-                Each request is limited to 100 MB. Upload only files you own or have permission to use.
-            </p>
-            <button class="btn" type="submit">＋ Add product</button>
-        </form>
-    </section>
-
-    <section class="manage-section">
-        <h2>Your products</h2>
-
-        {% for product in products %}
-        <article class="manage-card">
-            <div class="manage-top">
-                <div class="manage-product">
-                    {% if product.image %}
-                    <img src="{{ url_for('static', filename=product.image) }}"
-                         alt="{{ product.name }}">
-                    {% else %}
-                    <div class="small-placeholder">⚡</div>
-                    {% endif %}
-                    <div>
-                        <h3>{{ product.name }}</h3>
-                        <p>{{ product.category }} · ₹{{ "%.2f"|format(product.price) }}</p>
-                    </div>
-                </div>
-
-                <form method="POST" action="{{ url_for('delete_product', product_id=product.id) }}"
-                      onsubmit="return confirm('Delete this product permanently?');">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn-danger" type="submit">Delete</button>
-                </form>
-            </div>
-
-            <details class="edit-details">
-                <summary>✎ Edit product, price or uploaded files</summary>
-
-                <form class="product-form" method="POST"
-                      action="{{ url_for('edit_product', product_id=product.id) }}"
-                      enctype="multipart/form-data">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                    <div class="form-grid">
-                        <div>
-                            <label>Product name</label>
-                            <input name="name" value="{{ product.name }}" required maxlength="150">
-                        </div>
-
-                        <div>
-                            <label>Category</label>
-                            <select name="category" required>
-                                {% for category in categories %}
-                                <option value="{{ category }}"
-                                    {% if product.category == category %}selected{% endif %}>
-                                    {{ category }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label>Price in ₹</label>
-                            <input name="price" type="number" min="0" step="0.01"
-                                   value="{{ product.price }}" required>
-                        </div>
-
-                        <div>
-                            <label>Stock quantity</label>
-                            <input name="stock" type="number" min="0" step="1"
-                                   value="{{ product.stock }}" required>
-                        </div>
-
-                        <div class="wide">
-                            <label>Description</label>
-                            <textarea name="description" rows="3" maxlength="2000">{{ product.description }}</textarea>
-                        </div>
-
-                        <div>
-                            <label>Replace photo (optional)</label>
-                            <input name="image" type="file"
-                                   accept=".jpg,.jpeg,.png,.webp,.gif">
-                            {% if product.image %}
-                            <small>Current photo is saved. Leave empty to keep it.</small>
-                            {% endif %}
-                        </div>
-
-                        <div>
-                            <label>Replace PDF (optional)</label>
-                            <input name="document" type="file" accept=".pdf">
-                            {% if product.document %}
-                            <small>Leave empty to keep the current PDF.</small>
-                            {% endif %}
-                        </div>
-
-                        <div class="wide">
-                            <label>Replace video (optional)</label>
-                            <input name="video" type="file" accept=".mp4,.webm">
-                            {% if product.video %}
-                            <small>Leave empty to keep the current video.</small>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <button class="btn" type="submit">Save changes</button>
-                </form>
-            </details>
-        </article>
-        {% else %}
-        <p>No products yet. Add your first product above.</p>
-        {% endfor %}
-    </section>
-</main>
-</body>
-</html>
+<h2 style="margin-top:40px">🧾 Orders + UPI Payments ({{ orders|length }}) - BOB: 9667311958@ybl</h2><div style="background:white;border-radius:16px;overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:950px"><thead style="background:#f8fafc"><tr><th style="padding:12px">ID</th><th style="padding:12px">Customer</th><th style="padding:12px">Product / Total</th><th style="padding:12px">Payment</th><th style="padding:12px">Status / Address</th><th style="padding:12px">Action</th></tr></thead><tbody>{% for o in orders %}<tr style="border-top:1px solid #e2e8f0"><td style="padding:12px">#{{ o['id'] }}</td><td style="padding:12px">{{ o['username'] }}<br><small>{{ o['email'] }}</small></td><td style="padding:12px">{{ o['product_name'] }}<br><b>₹{{ o['total_price']|int }}</b><br><small>{{ o['quantity'] }} qty</small></td><td style="padding:12px"><span style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;{% if o['payment_method']=='UPI' %}background:#dbeafe;color:#1e40af{% else %}background:#fef9c3;color:#a16207{% endif %}">{{ o['payment_method'] }}</span><br><span style="font-size:11px">Pay: {{ o['payment_status'] }}</span><br>{% if o['payment_screenshot'] %}<a href="{{ url_for('static', filename='uploads/payments/' + o['payment_screenshot']) }}" target="_blank" style="font-size:11px;color:#2563eb">📸 View Screenshot</a>{% endif %}{% if o['payment_method']=='UPI' and o['payment_status']=='Pending' %}<form method="POST" action="/owner/verify_payment/{{ o['id'] }}" style="margin-top:6px;display:flex;gap:4px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="payment_status" value="Verified" style="padding:4px 8px;background:#dcfce7;color:#15803d;border:none;border-radius:6px;font-size:11px;cursor:pointer">✓ Verify</button><button name="payment_status" value="Rejected" style="padding:4px 8px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;cursor:pointer">✗ Reject</button></form>{% endif %}</td><td style="padding:12px"><span style="padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;background:#f1f5f9">{{ o['status'] }}</span><div style="font-size:11px;color:#475569;margin-top:6px;max-width:200px;white-space:pre-wrap">{{ o['address'] }}</div></td><td style="padding:12px"><form method="POST" action="/owner/order_status/{{ o['id'] }}" style="display:flex;gap:6px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="status" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;font-size:11px"><option value="Placed" {% if o['status']=='Placed' %}selected{% endif %}>Placed</option><option value="Packed" {% if o['status']=='Packed' %}selected{% endif %}>Packed</option><option value="Shipped" {% if o['status']=='Shipped' %}selected{% endif %}>Shipped</option><option value="Out for Delivery" {% if o['status']=='Out for Delivery' %}selected{% endif %}>Out for Delivery</option><option value="Delivered" {% if o['status']=='Delivered' %}selected{% endif %}>Delivered</option><option value="Cancelled" {% if o['status']=='Cancelled' %}selected{% endif %}>Cancelled</option></select><button style="padding:6px 10px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:11px;cursor:pointer">Update</button></form></td></tr>{% endfor %}</tbody></table></div></main></body></html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Quick Bill - ElectroMart</title>
+<style>
+body{font-family:Inter;background:#f8fafc;padding:15px}
+.bill-box{background:white;max-width:900px;margin:0 auto;padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+.row{display:grid;grid-template-columns:3fr 1fr 1fr 80px;gap:10px;margin:8px 0;align-items:center}
+input,select{padding:10px;border:1px solid #e2e8f0;border-radius:8px}
+.btn{padding:12px;background:#0f172a;color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;width:100%}
+.total{font-size:22px;font-weight:900;text-align:right;margin:15px 0}
+@media print {.no-print{display:none} body{background:white} .bill-box{box-shadow:none}}
+</style>
+</head><body>
+<div class="bill-box">
+<div class="no-print" style="display:flex;justify-content:space-between;margin-bottom:15px"><a href="/owner">← Dashboard</a><b>ElectroMart - Quick Bill</b><span>{{ session['username'] }}</span></div>
+
+<h2>🧾 Quick Bill - Dukan Counter</h2>
+<input type="text" id="search" placeholder="Product Search - ex: Wire, Pipe, Switch..." style="width:100%;margin-bottom:15px" onkeyup="filterProducts()">
+
+<form method="POST" action="/owner/quick-bill/print" id="billForm">
+<div id="billRows">
+<div class="row" style="font-weight:700;background:#f1f5f9;padding:8px;border-radius:8px"><div>Product</div><div>Price</div><div>Qty</div><div>Total</div></div>
+</div>
+
+<div class="total">Total: ₹<span id="grandTotal">0</span></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" class="no-print">
+<button type="button" class="btn" style="background:#16a34a" onclick="window.print()">🖨️ Print Bill</button>
+<button type="button" class="btn" style="background:#25D366" onclick="sendWhatsApp()">📱 WhatsApp Bill</button>
+</div>
+<button type="submit" class="btn no-print" style="margin-top:10px;background:#0ea5e9">✅ Bill Done - Stock Kaato</button>
+</form>
+
+<h3 style="margin-top:30px" class="no-print">📦 All Products (Click to Add)</h3>
+<div id="productList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" class="no-print">
+{% for p in products %}
+<div class="p-card" data-name="{{ p['name']|lower }}" onclick="addToBill({{ p['id'] }}, '{{ p['name'] }}', {{ p['price'] }}, {{ p['stock'] }})" style="border:1px solid #e2e8f0;padding:10px;border-radius:10px;cursor:pointer;background:{% if p['stock']<=5 %}#fef2f2{% else %}white{% endif %}">
+<b>{{ p['name'] }}</b><br><small>{{ p['category'] }}</small><br>₹{{ p['price'] }} | Stock: {{ p['stock'] }}
+</div>
+{% endfor %}
+</div>
+
+</div>
+
+<script>
+let grand = 0;
+function addToBill(id, name, price, stock){
+ if(stock<=0){alert('Out of Stock!');return;}
+ let div = document.createElement('div'); div.className='row';
+ div.innerHTML = `<div>${name}<input type="hidden" name="product_id" value="${id}"></div><div>₹${price}</div><div><input type="number" name="qty" value="1" min="1" max="${stock}" style="width:60px" oninput="calc()"></div><div class="lineTotal">₹${price}</div>`;
+ document.getElementById('billRows').appendChild(div); calc();
+}
+function calc(){
+ let total=0; document.querySelectorAll('#billRows .row').forEach((r,i)=>{ if(i==0)return; let price = parseFloat(r.children[1].innerText.replace('₹','')); let qty = parseFloat(r.children[2].children[0].value)||0; let line = price*qty; r.children[3].innerText='₹'+line; total+=line; });
+ document.getElementById('grandTotal').innerText=total; grand=total;
+}
+function filterProducts(){
+ let q=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('.p-card').forEach(c=>{ c.style.display=c.dataset.name.includes(q)?'block':'none'; });
+}
+function sendWhatsApp(){
+ let text = "ElectroMart Bill%0A";
+ document.querySelectorAll('#billRows .row').forEach((r,i)=>{ if(i==0)return; text+= r.children[0].innerText + " x " + r.children[2].children[0].value + " = " + r.children[3].innerText + "%0A"; });
+ text+= "%0ATotal: ₹"+grand+"%0AThank You! Visit Again 🙏";
+ window.open("https://wa.me/?text="+text, "_blank");
+}
+</script>
+</body></html>

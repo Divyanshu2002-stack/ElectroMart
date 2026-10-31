@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Login - ElectroMart</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:linear-gradient(135deg,#2563eb,#0ea5e9);min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;padding:30px;border-radius:20px;width:340px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.2)}
+.logo{font-weight:900;font-size:22px;color:#0f172a}
+.sub{color:#64748b;font-size:13px;margin:8px 0 20px}
+.btn{display:block;width:100%;padding:12px;border-radius:10px;text-decoration:none;font-weight:700;margin:10px 0;transition:0.2s}
+.btn-user{background:#0f172a;color:#fff}
+.btn-admin{background:#f1f5f9;color:#0f172a;border:1px solid #e2e8f0}
+.btn-reg{background:#fff;color:#64748b;font-size:13px}
+.btn:hover{transform:translateY(-2px)}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">⚡ ElectroMart</div>
+  <div class="sub">Choose Login Type</div>
+
+  <a href="/login" class="btn btn-user">👤 User Login</a>
+  <a href="/owner/login" class="btn btn-admin">🛡️ Admin Login</a>
+  <a href="/register" class="btn btn-reg">👤 Register</a>
+
+  <a href="/" style="font-size:12px;color:#94a3b8;text-decoration:none;display:block;margin-top:15px">← Back to Home</a>
+</div>
+</body>
+</html>

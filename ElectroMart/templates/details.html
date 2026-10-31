@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ p['name'] }} - ElectroMart</title>
+<style>
+body{margin:0;background:#f1f5f9;font-family:system-ui}
+.detail-grid{max-width:1200px;margin:20px auto;display:grid;grid-template-columns:400px 1fr 300px;gap:16px;padding:0 14px}
+@media(max-width:900px){.detail-grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:16px;padding:16px;border:1px solid #e2e8f0}
+.img-main{width:100%;border-radius:12px;object-fit:contain;background:#f8fafc}
+.price-big{font-size:28px;font-weight:800}
+.mrp{font-size:14px;color:#64748b;text-decoration:line-through;margin-left:8px}
+.off{font-size:13px;color:#16a34a;background:#dcfce7;padding:3px 8px;border-radius:20px;font-weight:700;margin-left:8px}
+.stock-badge{display:inline-block;padding:7px 14px;border-radius:20px;font-weight:700;font-size:13px;margin-top:10px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:12px}
+.related-card{background:#fff;border-radius:12px;padding:10px;border:1px solid #e2e8f0;text-decoration:none;color:#0f172a}
+</style>
+</head>
+<body>
+<header style="background:#0f172a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between"><a href="/" style="color:#fff;text-decoration:none;font-weight:800">ElectroMart</a><div style="display:flex;gap:14px"><a href="/wishlist" style="color:#fff;text-decoration:none">❤️ Wishlist</a><a href="/cart" style="color:#fff;text-decoration:none">🛒 Cart</a></div></header>
+
+<div class="detail-grid">
+  <div class="card">
+    {% if p['image'] %}<img src="{{ url_for('static', filename='uploads/' + p['image']) }}" class="img-main">{% else %}<div style="height:300px;display:flex;align-items:center;justify-content:center;color:#94a3b8;background:#f8fafc;border-radius:12px">No Image</div>{% endif %}
+    {% if p['video'] %}<video src="{{ url_for('static', filename='uploads/' + p['video']) }}" controls class="img-main" style="margin-top:10px"></video>{% endif %}
+  </div>
+
+  <div class="card">
+    <div style="color:#0ea5e9;font-weight:700;font-size:12px;text-transform:uppercase">{{ p['category'] }}</div>
+    <h1 style="font-size:22px;margin:8px 0 6px 0">{{ p['name'] }}</h1>
+    <div><span style="background:#16a34a;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px">4.3 ★</span> <span style="color:#0ea5e9;font-size:13px;margin-left:6px">1,248 Ratings & 420 Reviews</span></div>
+
+    <hr style="margin:14px 0;border:none;border-top:1px solid #f1f5f9">
+
+    {% set mrp = (p['price'] * 1.35) | int %}
+    {% set discount = ((mrp - p['price'])/mrp*100) | int %}
+    <div style="display:flex;align-items:center;flex-wrap:wrap">
+      <span class="price-big">₹{{ p['price'] | int }}</span>
+      <span class="mrp">M.R.P: ₹{{ mrp }}</span>
+      <span class="off">{{ discount }}% OFF</span>
+    </div>
+    <div style="font-size:13px;color:#64748b">Inclusive of all taxes</div>
+
+    {% if p['stock'] > 10 %}
+      <div class="stock-badge" style="background:#f0fdf4;color:#16a34a">✅ In Stock - {{ p['stock'] }} Units Left</div>
+    {% elif p['stock'] > 0 %}
+      <div class="stock-badge" style="background:#fef9c3;color:#a16207">⚠️ Hurry, Only {{ p['stock'] }} Left!</div>
+    {% else %}
+      <div class="stock-badge" style="background:#fef2f2;color:#dc2626">❌ Out of Stock</div>
+    {% endif %}
+
+    <h3 style="margin:18px 0 8px 0">About this item</h3>
+    <ul style="color:#334155;line-height:1.8;font-size:14px;margin:0;padding-left:18px">
+      <li><b>Product Name:</b> {{ p['name'] }}</li>
+      <li><b>Price Details:</b> Selling Price ₹{{ p['price'] | int }}, Original MRP ₹{{ mrp }}</li>
+      <li><b>Stock Information:</b> {{ p['stock'] }} pieces available in our warehouse right now</li>
+      <li><b>Full Description:</b> {{ p['description'] }}</li>
+      <li><b>Category:</b> {{ p['category'] }}</li>
+      <li><b>Warranty:</b> 1 Year Brand Warranty + 6 Months Seller Warranty</li>
+      <li><b>Delivery:</b> FREE delivery by Tomorrow 9PM</li>
+    </ul>
+  </div>
+
+  <div class="card" style="height:fit-content">
+    <div class="price-big">₹{{ p['price'] | int }}</div>
+    <div style="color:#16a34a;font-weight:700;font-size:13px;margin:6px 0">✓ FREE delivery - Tomorrow by 9PM</div>
+    <div style="font-size:13px">Sold by <b>ElectroMart</b> | Fulfilled by ElectroMart</div>
+
+    <form method="POST" action="{{ url_for('add_to_cart', product_id=p['id']) }}" style="margin-top:14px">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label style="font-size:13px">Quantity:</label>
+      <select name="quantity" style="width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e1;margin:6px 0 12px 0">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+      </select>
+      {% if p['stock'] > 0 %}
+      <button type="submit" style="width:100%;padding:14px;background:#facc15;border:none;border-radius:20px;font-weight:800;font-size:15px;cursor:pointer">Add to Cart</button>
+      <button type="submit" formaction="{{ url_for('add_to_cart', product_id=p['id']) }}?buy=1" style="width:100%;padding:14px;background:#fb923c;border:none;border-radius:20px;font-weight:800;font-size:15px;margin-top:8px;cursor:pointer">Buy Now</button>
+      {% else %}
+      <button disabled style="width:100%;padding:14px;background:#e2e8f0;border:none;border-radius:20px;font-weight:800">Out of Stock</button>
+      {% endif %}
+    </form>
+
+    <!-- ===== NEW: Wishlist Button (naye app.py ke liye) ===== -->
+    <form method="POST" action="{{ url_for('add_to_wishlist', product_id=p['id']) }}" style="margin-top:8px">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" style="width:100%;padding:12px;background:#fff;border:1px solid #e2e8f0;border-radius:20px;font-weight:700;font-size:14px;cursor:pointer">❤️ Add to Wishlist</button>
+    </form>
+
+  </div>
+</div>
+
+<!-- ===== NEW: Related Products Section (naye app.py ka related variable use hoga) ===== -->
+{% if related %}
+<div style="max-width:1200px;margin:20px auto;padding:0 14px">
+  <div class="card">
+    <h3 style="margin:0 0 10px 0">Related Products - More from {{ p['category'] }}</h3>
+    <div class="related-grid">
+      {% for r in related %}
+      <a href="{{ url_for('product_detail', product_id=r['id']) }}" class="related-card">
+        {% if r['image'] %}<img src="{{ url_for('static', filename='uploads/' + r['image']) }}" style="width:100%;height:120px;object-fit:contain;background:#f8fafc;border-radius:8px">{% endif %}
+        <div style="font-size:13px;font-weight:600;margin-top:6px;height:32px;overflow:hidden">{{ r['name'] }}</div>
+        <div style="font-weight:800;margin-top:4px">₹{{ r['price']|int }}</div>
+        <div style="font-size:11px;color:{% if r['stock']>0 %}green{% else %}red{% endif %}">{% if r['stock']>0 %}{{ r['stock'] }} left{% else %}Out of stock{% endif %}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+</body>
+</html>

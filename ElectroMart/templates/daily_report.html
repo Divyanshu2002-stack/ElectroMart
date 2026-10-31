@@ -1,0 +1,19 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Daily Report</title><style>body{font-family:Inter;background:#f8fafc;padding:20px} .box{background:white;padding:20px;border-radius:16px;max-width:1000px;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.05);margin-bottom:20px} .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px} .card{padding:16px;border-radius:12px;text-align:center} .green{background:#dcfce7;color:#166534} .blue{background:#dbeafe;color:#1e40af} .yellow{background:#fef9c3;color:#a16207}</style></head><body>
+<div class="box" style="display:flex;justify-content:space-between;align-items:center"><a href="/owner">← Dashboard</a><b>📊 Aaj Ka Hisab - {{ all_time['total_orders'] or 0 }} Orders</b><a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 12px;border-radius:20px;text-decoration:none">🧾 Quick Bill</a></div>
+
+<div class="box"><h2>📅 Aaj - {{ all_time['total_orders'] or 0 }} Orders</h2><div class="grid">
+<div class="card blue"><h3>₹{{ (all_time['total_sale'] or 0)|int }}</h3><small>Total Sale</small></div>
+<div class="card green"><h3>₹{{ profit_today|int }}</h3><small>Aaj Ka Profit (Cost - Selling)</small></div>
+<div class="card yellow"><h3>{{ today_orders|length }}</h3><small>Products Becha</small></div>
+</div></div>
+
+<div class="box"><h3>🧾 Aaj Becha Hua Samaan</h3>
+<table style="width:100%;border-collapse:collapse"><tr style="background:#f8fafc"><th style="padding:10px;text-align:left">Product</th><th>Qty</th><th>Cost</th><th>Sell</th><th>Profit</th></tr>
+{% for o in today_orders %}<tr style="border-top:1px solid #e2e8f0"><td style="padding:10px">{{ o['name'] }}</td><td style="text-align:center">{{ o['quantity'] }}</td><td style="text-align:center">₹{{ o['cost_price']|int }}</td><td style="text-align:center">₹{{ o['price']|int }}</td><td style="text-align:center;color:#16a34a;font-weight:700">₹{{ ((o['price']-o['cost_price'])*o['quantity'])|int }}</td></tr>{% endfor %}
+{% if today_orders|length==0 %}<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">Aaj koi sale nahi hua - Quick Bill se bill kaato</td></tr>{% endif %}
+</table></div>
+
+<div class="box"><h3>📈 Last 7 Din Ka Sale</h3>
+{% for m in month_data %}<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #f1f5f9"><span>{{ m['date'] }}</span><span>{{ m['orders'] }} orders</span><b>₹{{ m['sale']|int }}</b></div>{% endfor %}</div>
+
+</body></html>

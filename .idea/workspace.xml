@@ -1,26 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="32f3342f-552d-486e-8fad-0eac9293c269" name="Changes" comment="" />
+    <list default="true" id="32f3342f-552d-486e-8fad-0eac9293c269" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/ElectroMart.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ElectroMart.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/requiements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/requiements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/static/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/static/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/cart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/checkout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/daily_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/daily_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/edit_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/edit_product.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/forgetpassword.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/forgetpassword.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/myprder.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/myprder.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/productdetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/productdetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/quick_bill.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/quick_bill.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/reset_password.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/setting.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/setting.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/wishlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/wishlist.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/ElectroMart/templates/productdetail.html" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="3LKW2Pshl0daptZ4TBoNE9rSBYs" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "Python.app.executor": "Run",
+    "Python.fix.executor": "Run",
+    "Python.fixpass.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart" />
+      <recent name="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart\static" />
+      <recent name="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart\static\uploads" />
+      <recent name="C:\Users\OSR\PycharmProjects\ElectroMart" />
+      <recent name="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart\templates" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python">
+      <module name="ElectroMart" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="FLASK_SECRET_KEY" value="electromart_secret_12345" />
+        <env name="OWNER_USERNAME" value="shopowner" />
+        <env name="OWNER_PASSWORD" value="shop123" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.13 (ElectroMart)" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart\app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
