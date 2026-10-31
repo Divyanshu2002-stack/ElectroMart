@@ -1,19 +1,35 @@
 <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Khata Book - Papa Ki Dairy</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter} body{background:#f8fafc;padding:15px}
-.box{background:white;padding:18px;border-radius:16px;max-width:1100px;margin:0 auto 16px;box-shadow:0 4px 20px rgba(0,0,0,0.05)}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px} .card{padding:14px;border-radius:12px;text-align:center;font-weight:700}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter, 'Segoe UI', sans-serif}
+body{background:#f8fafc;padding:12px;overflow-x:hidden}
+.box{background:white;padding:18px;border-radius:16px;max-width:1100px;margin:0 auto 16px;box-shadow:0 4px 20px rgba(0,0,0,0.05);width:100%;overflow:hidden}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{padding:14px;border-radius:12px;text-align:center;font-weight:700}
 .red{background:#fee2e2;color:#dc2626;border:2px solid #fecaca} .green{background:#dcfce7;color:#166534} .blue{background:#dbeafe;color:#1e40af}
-input,textarea{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px} label{font-size:12px;font-weight:700;color:#475569}
-.btn{padding:10px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
-.khata-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 120px;gap:10px;align-items:center;padding:12px;border-radius:12px;margin:8px 0;border:1px solid #e2e8f0}
+input,textarea,select{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10px;margin-top:6px;font-size:14px}
+label{font-size:12px;font-weight:700;color:#475569}
+.btn{padding:10px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.khata-row{display:grid;grid-template-columns:1.5fr 1fr 1fr 120px;gap:10px;align-items:center;padding:12px;border-radius:12px;margin:8px 0;border:1px solid #e2e8f0;width:100%}
 .udhar{background:#fff1f2;border:2px solid #fca5a5} .paid{background:#f0fdf4;border:2px solid #bbf7d0}
-@media(max-width:700px){.grid3{grid-template-columns:1fr} .khata-row{grid-template-columns:1fr}}
+
+/* --- FIX ORIGINAL JAISA --- */
+@media(max-width:900px){
+  .khata-row{grid-template-columns:1fr 1fr; }
+  .khata-row div:last-child{grid-column:1 / -1; display:flex; gap:8px; justify-content:center}
+}
+@media(max-width:700px){
+  body{padding:8px}
+  .grid3{grid-template-columns:1fr}
+  .khata-row{grid-template-columns:1fr; gap:12px; padding:14px}
+  .box{padding:14px 10px; border-radius:12px}
+  .box form div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}
+  input,textarea{font-size:14px}
+}
 </style></head><body>
 
 <div class="box" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-<div><a href="/owner">← Dashboard</a> <b style="margin-left:10px">📒 Papa Ki Khata Book</b></div>
-<div style="display:flex;gap:8px"><a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">🧾 Quick Bill</a><a href="/owner/report" style="background:#0ea5e9;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">📊 Report</a></div>
+<div><a href="/owner" style="text-decoration:none;color:#0f172a;font-weight:700">← Dashboard</a> <b style="margin-left:10px">📒 Papa Ki Khata Book</b></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">🧾 Quick Bill</a><a href="/owner/report" style="background:#0ea5e9;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">📊 Report</a></div>
 </div>
 
 <div class="box"><div class="grid3">
@@ -32,12 +48,12 @@ input,textarea{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10
 <button class="btn" style="background:#0f172a;color:white;width:100%;padding:14px">📒 Khata Me Likho - Save Karo</button>
 </form></div>
 
-<div class="box"><form method="GET" action="/owner/khata" style="display:flex;gap:8px;flex-wrap:wrap"><input type="text" name="q" value="{{ request.args.get('q','') }}" placeholder="Naam ya Mobile se search..." style="flex:1;min-width:200px"><select name="status" style="padding:10px;border-radius:10px;border:1px solid #e2e8f0"><option value="">Sab Dikhao</option><option value="Udhar" {% if request.args.get('status')=='Udhar' %}selected{% endif %}>🔴 Sirf Udhar Wale</option><option value="Paid" {% if request.args.get('status')=='Paid' %}selected{% endif %}>✅ Paid Wale</option></select><button class="btn" style="background:#f1f5f9">🔍 Search</button></form></div>
+<div class="box"><form method="GET" action="/owner/khata" style="display:flex;gap:8px;flex-wrap:wrap"><input type="text" name="q" value="{{ request.args.get('q','') }}" placeholder="Naam ya Mobile se search..." style="flex:1;min-width:200px"><select name="status" style="padding:10px;border-radius:10px;border:1px solid #e2e8f0;min-width:140px"><option value="">Sab Dikhao</option><option value="Udhar" {% if request.args.get('status')=='Udhar' %}selected{% endif %}>🔴 Sirf Udhar Wale</option><option value="Paid" {% if request.args.get('status')=='Paid' %}selected{% endif %}>✅ Paid Wale</option></select><button class="btn" style="background:#f1f5f9">🔍 Search</button></form></div>
 
 <div class="box"><h3>📒 Sare Khate - Date/Time ke saath</h3>
 {% for k in khata_list %}
 <div class="khata-row {% if k['status']=='Udhar' %}udhar{% else %}paid{% endif %}">
-<div><b>{% if k['status']=='Udhar' %}🔴{% else %}✅{% endif %} {{ k['customer_name'] }}</b><br><small>📱 {{ k['mobile'] }} | {{ k['address'] }}</small><br><small style="color:#64748b">{{ k['created_at'] }}</small><br><small style="background:#f1f5f9;padding:2px 6px;border-radius:6px;margin-top:4px;display:inline-block">{{ k['items'] }}</small></div>
+<div><b>{% if k['status']=='Udhar' %}🔴{% else %}✅{% endif %} {{ k['customer_name'] }}</b><br><small>📱 {{ k['mobile'] }} | {{ k['address'] }}</small><br><small style="color:#64748b">{{ k['created_at'] }}</small><br><small style="background:#f1f5f9;padding:2px 6px;border-radius:6px;margin-top:4px;display:inline-block;word-break:break-word">{{ k['items'] }}</small></div>
 <div style="text-align:center"><small>Total</small><br><b>₹{{ k['total_amount']|int }}</b><br><small>Diya: ₹{{ k['paid_amount']|int }}</small><br>{% if k['status']=='Udhar' %}<span style="background:#dc2626;color:white;padding:3px 8px;border-radius:20px;font-size:11px">Baaki ₹{{ k['balance']|int }}</span>{% else %}<span style="background:#16a34a;color:white;padding:3px 8px;border-radius:20px;font-size:11px">✅ Clear</span>{% endif %}</div>
 <div>
 {% if k['status']=='Udhar' %}
@@ -47,7 +63,7 @@ input,textarea{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:10
 <div style="text-align:center;color:#16a34a;font-weight:700">✅ Hisab Clear<br><small style="color:#64748b">{{ k['updated_at'] }}</small></div>
 {% endif %}
 </div>
-<div style="text-align:center"><form method="POST" action="/owner/khata/delete/{{ k['id'] }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn" style="background:#fee2e2;color:#dc2626;font-size:11px">🗑️ Delete</button></form><small style="font-size:10px;color:#94a3b8">{{ k['updated_at'] }}</small></div>
+<div style="text-align:center"><form method="POST" action="/owner/khata/delete/{{ k['id'] }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn" style="background:#fee2e2;color:#dc2626;font-size:11px;width:100%">🗑️ Delete</button></form><small style="font-size:10px;color:#94a3b8">{{ k['updated_at'] }}</small></div>
 </div>
 {% endfor %}
 {% if khata_list|length==0 %}<p style="text-align:center;padding:30px;color:#64748b">Koi khata nahi hai - Upar se naya add karo 📒</p>{% endif %}

@@ -134,3 +134,37 @@ body { background:#f0f4f8; color:#1a202c; overflow-x:hidden; }
     transform: translateY(-1px);
     box-shadow: 0 8px 20px rgba(239,68,68,0.3);
 }
+/* --- SCREEN FIX ORIGINAL JAISA --- */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+.container, .main-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Product / Outlet Grid Fix */
+.product-grid, .outlet-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  .product-grid, .outlet-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.product-card, .outlet-card {
+  width: 100% !important;
+}
+.product-card img, .outlet-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}

@@ -5,30 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="32f3342f-552d-486e-8fad-0eac9293c269" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ElectroMart.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ElectroMart.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/requiements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/requiements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/static/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/static/script.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ElectroMart/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/static/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/Khata.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/cart.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/change_password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/checkout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/daily_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/daily_report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/edit_product.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/edit_product.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/forgetpassword.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/forgetpassword.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/myprder.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/myprder.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/productdetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/productdetail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/quick_bill.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/quick_bill.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/reset_password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/setting.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/setting.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ElectroMart/templates/wishlist.html" beforeDir="false" afterPath="$PROJECT_DIR$/ElectroMart/templates/wishlist.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,19 +38,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.app.executor": "Run",
-    "Python.fix.executor": "Run",
-    "Python.fixpass.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fix.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fixpass.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\OSR\PycharmProjects\ElectroMart\ElectroMart" />
