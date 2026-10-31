@@ -271,6 +271,31 @@ def change_password():
             else: db.execute("UPDATE users SET password_hash=? WHERE id=?", (generate_password_hash(new), session['user_id'])); flash("Password change ho gaya!", "success"); return redirect(url_for("settings"))
     return render_template("change_password.html")
 
+# --- NEW OWNER PASSWORD CHANGE ---
+@app.route("/owner/change-password", methods=["GET", "POST"])
+@owner_required
+def owner_change_password():
+    if request.method == "POST":
+        validate_csrf()
+        old = request.form.get("old_password", "")
+        new = request.form.get("new_password", "")
+        confirm = request.form.get("confirm_password", "")
+        if new != confirm:
+            flash("Naya password match nahi kar raha!", "error")
+            return redirect(url_for("owner_change_password"))
+        with get_db() as db:
+            user = db.execute("SELECT * FROM users WHERE id=?", (session['user_id'],)).fetchone()
+            if not check_password_hash(user["password_hash"], old):
+                flash("Purana password galat hai!", "error")
+            elif len(new) < 8:
+                flash("Naya password min 8 chars!", "error")
+            else:
+                db.execute("UPDATE users SET password_hash=? WHERE id=?", (generate_password_hash(new), session['user_id']))
+                db.commit()
+                flash("Owner Password Change Ho Gaya! ✅", "success")
+                return redirect(url_for("admin"))
+    return render_template("change_password.html")
+
 @app.route("/wishlist")
 @login_required
 def wishlist():
@@ -514,7 +539,6 @@ def set_theme(theme):
 
 init_db()
 
-# --- LIVE KE LIYE FINAL LINE ---
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
