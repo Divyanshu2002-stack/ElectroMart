@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ElectroMart - Dehradun</title>
 
 <!-- ✅ PWA - Bamarara Electronics App ke liye -->
@@ -12,8 +12,9 @@
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
-body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color 0.3s; }
-.top-nav { background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.04); overflow:visible; }
+html { padding-top: env(safe-area-inset-top); background: #fff; }
+body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color 0.3s; padding-top: env(safe-area-inset-top, 28px); }
+.top-nav { background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:env(safe-area-inset-top, 28px); z-index:100; box-shadow:0 2px 10px rgba(0,0,0,0.04); overflow:visible; }
 .top-nav .left { display:flex; align-items:center; gap:14px; overflow:auto; scrollbar-width:none; flex:1; }
 .top-nav .left::-webkit-scrollbar { display:none; }
 .top-nav .logo { font-weight:900; font-size:19px; color:#0f172a; display:flex; align-items:center; gap:6px; text-decoration:none; letter-spacing:-0.5px; }
@@ -94,7 +95,6 @@ body { background:#f8fafc; overflow-x:hidden; transition: background 0.3s, color
 </style>
 </head>
 <body>
-
 <div class="top-nav">
   <div class="left">
     <a href="/" class="logo">⚡ ElectroMart</a>
