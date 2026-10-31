@@ -1,31 +1,124 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bamarara Electronics - Owner Dashboard</title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>Bamarara Electronics - Owner Dashboard</title>
 <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 <meta name="theme-color" content="#0f172a">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+html { background:#f1f5f9; -webkit-text-size-adjust:100%; }
+body { background:#f1f5f9; overflow-x:hidden; color:#0f172a; }
+
+/* ✅ NAVBAR - User jaisa chhota */
+.navbar {
+  background:rgba(255,255,255,0.98); backdrop-filter:blur(10px);
+  border-bottom:1px solid #e2e8f0;
+  padding:10px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:1000;
+  box-shadow:0 2px 10px rgba(0,0,0,0.04);
+  flex-wrap:wrap; gap:10px;
+}
+.navbar .logo a { font-weight:900; font-size:17px; color:#0f172a; text-decoration:none; }
+.navbar .login-btn { background:#0f172a; color:white; padding:8px 14px; border-radius:20px; text-decoration:none; font-weight:700; font-size:13px; min-height:40px; display:flex; align-items:center; }
+.product-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-top:12px; }
+.product-card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:12px; transition:0.2s; }
+.product-card:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.08); }
+input, select, textarea { font-size:16px !important; } /* iPhone zoom band */
+button { cursor:pointer; }
+
+/* ✅ APP TOP BAR FIX - AppsGeyser ke liye */
+@media(max-width:768px){
+  html { padding-top: env(safe-area-inset-top, 0px); }
+  body::before{
+    content:""; position:fixed; top:0; left:0; right:0;
+    height: env(safe-area-inset-top, 35px);
+    background:#ffffff; z-index:999;
+  }
+  .navbar{ top: env(safe-area-inset-top, 35px) !important; padding:10px 12px !important; }
+  .product-grid{ grid-template-columns:repeat(2, 1fr) !important; gap:10px !important; }
+  main { padding:14px 10px !important; }
+  h2 { font-size:18px !important; }
+  .product-card img, .product-card video { height:130px !important; }
+}
+@media(max-width:900px){ .product-grid{ grid-template-columns:repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo"><a href="/">⚡ Bamarara Electronics - Owner</a></div>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <a href="/owner/khata" style="background:#dc2626;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:12px;min-height:38px;display:flex;align-items:center">📒 Khata {% if khata_total and khata_total['c'] >0 %}({{ khata_total['c'] }}){% endif %}</a>
+    <a href="/owner/report" style="background:#0ea5e9;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:12px;min-height:38px;display:flex;align-items:center">📊 Report</a>
+    <a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:12px;min-height:38px;display:flex;align-items:center">🧾 Bill</a>
+    <a href="/owner/settings" style="background:#7c3aed;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:12px;min-height:38px;display:flex;align-items:center">⚙️ Settings</a>
+    <a href="/owner/change-password" style="background:#000;color:white;padding:8px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:12px;min-height:38px;display:flex;align-items:center">🔑 Pass</a>
+    <a href="/" class="login-btn">View Site</a>
+  </div>
+</header>
+
+<main style="padding:20px;max-width:1220px;margin:0 auto">
+
+{% if khata_total and khata_total['t'] %}
+<div style="background:#fef2f2;border:2px solid #fecaca;padding:12px 14px;border-radius:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+<span style="color:#dc2626;font-weight:800;font-size:13px">📒 Khata Udhar: ₹{{ khata_total['t']|int }} | {{ khata_total['c'] }} log</span>
+<a href="/owner/khata?status=Udhar" style="background:#dc2626;color:white;padding:7px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">Udhar Dekho</a>
+</div>
+{% endif %}
+
+{% if low_stock and low_stock|length > 0 %}
+<div style="background:#fef2f2;border:2px solid #fecaca;padding:14px;border-radius:14px;margin-bottom:20px">
+<h3 style="color:#dc2626;margin:0 0 8px 0;font-size:14px">⚠️ Low Stock - Laana hai ({{ low_stock|length }})</h3>
+{% for p in low_stock %}<span style="display:inline-block;background:white;border:1px solid #fecaca;padding:5px 10px;border-radius:20px;margin:3px;font-size:11px;font-weight:600">{{ p['name'] }} - {{ p['stock'] }} bacha</span>{% endfor %}
+</div>
+{% endif %}
+
+<h2 style="font-size:19px;font-weight:800;margin-bottom:10px">👑 Add Product - Photo & Video</h2>
+<form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data" style="background:white;padding:16px;border-radius:16px;display:grid;gap:10px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.05)">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input type="text" name="name" placeholder="Product Name ex: Inverter Pipe 1 inch" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;width:100%">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<select name="category" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;width:100%">{% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select>
+<input type="number" name="stock" placeholder="Stock Quantity" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;width:100%">
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<input type="number" step="0.01" name="cost_price" placeholder="Kharid Daam ₹ (Cost)" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#f0fdf4;width:100%">
+<input type="number" step="0.01" name="price" placeholder="Bechne ka Daam ₹ (Selling)" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#fffbeb;width:100%">
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<label style="background:#f0f9ff;padding:12px;border-radius:10px;border:2px dashed #0ea5e9;text-align:center;cursor:pointer;font-weight:700;font-size:13px;min-height:44px;display:flex;align-items:center;justify-content:center">📸 Photo<input type="file" name="photo" accept="image/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label>
+<label style="background:#fdf2f8;padding:12px;border-radius:10px;border:2px dashed #ec4899;text-align:center;cursor:pointer;font-weight:700;font-size:13px;min-height:44px;display:flex;align-items:center;justify-content:center">🎥 Video<input type="file" name="video" accept="video/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label>
+</div>
+<textarea name="description" placeholder="Product Description" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;min-height:70px;width:100%"></textarea>
+<button type="submit" style="padding:13px;background:linear-gradient(90deg,#0ea5e9,#6366f1);color:white;border:none;border-radius:12px;font-weight:800;cursor:pointer;min-height:46px;font-size:14px">Add Product 🚀</button>
+</form>
+
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+<h2 style="margin:0;font-size:18px;font-weight:800">📦 All Products ({{ products|length }})</h2>
+<div style="display:flex;gap:5px;flex-wrap:wrap">{% for c in categories %}<a href="/owner?category={{ c }}" style="padding:6px 10px;background:{% if selected_cat==c %}#0f172a{% else %}white{% endif %};color:{% if selected_cat==c %}white{% else %}#334155{% endif %};border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700">{{ c }}</a>{% endfor %}<a href="/owner" style="padding:6px 10px;background:white;border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700;color:#334155">All</a></div>
+</div>
+
+<div class="product-grid">{% for p in products %}<div class="product-card" style="background:white;padding:10px;border-radius:14px;border:{% if p['stock'] <=5 %}2px solid #dc2626{% else %}1px solid #e2e8f0{% endif %};position:relative;display:flex;flex-direction:column">
+{% if p['stock'] <=5 %}<span style="position:absolute;top:8px;right:8px;background:#dc2626;color:white;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700;z-index:1">LOW</span>{% endif %}
+{% if p['image'] %}<img src="{{ url_for('static', filename='uploads/' + p['image']) }}" style="width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:8px" loading="lazy">{% endif %}
+{% if p['video'] %}<video src="{{ url_for('static', filename='uploads/' + p['video']) }}" style="width:100%;height:140px;border-radius:10px" controls></video>{% endif %}
+<h3 style="margin:6px 0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p['name'] }}</h3>
+<p style="font-size:11px;color:#475569;margin:0">{{ p['category'] }}</p>
+<p style="margin:6px 0;font-size:12px;line-height:1.4">Bechne: <b>₹{{ p['price'] }}</b>{% if p['cost_price'] %}<br>Kharid: ₹{{ p['cost_price'] }} | <span style="color:#16a34a;font-weight:700">Profit ₹{{ (p['price'] - p['cost_price'])|int }}</span>{% endif %}<br>Stock: <b style="{% if p['stock'] <=5 %}color:#dc2626{% endif %}">{{ p['stock'] }}</b></p>
+<div style="display:flex;gap:8px;margin-top:auto;padding-top:8px"><a href="/owner/edit/{{ p['id'] }}" style="flex:1;background:#dbeafe;color:#1e40af;text-align:center;padding:10px 8px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;min-height:40px;display:flex;align-items:center;justify-content:center">✏️ Edit</a><form method="POST" action="{{ url_for('delete_product', product_id=p['id']) }}" style="flex:1"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button style="width:100%;background:#fee2e2;color:#dc2626;border:none;padding:10px 8px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;min-height:40px">Delete</button></form></div>
+</div>{% endfor %}</div>
+
+<h2 style="margin-top:32px;font-size:18px;font-weight:800">🧾 Orders + UPI Payments ({{ orders|length }}) - BOB: 9667311958@ybl</h2>
+<div style="background:white;border-radius:14px;overflow:auto;margin-top:10px"><table style="width:100%;border-collapse:collapse;min-width:950px"><thead style="background:#f8fafc"><tr><th style="padding:12px;font-size:12px">ID</th><th style="padding:12px;font-size:12px">Customer</th><th style="padding:12px;font-size:12px">Product / Total</th><th style="padding:12px;font-size:12px">Payment</th><th style="padding:12px;font-size:12px">Status / Address</th><th style="padding:12px;font-size:12px">Action</th></tr></thead><tbody>{% for o in orders %}<tr style="border-top:1px solid #e2e8f0"><td style="padding:10px;font-size:12px">#{{ o['id'] }}</td><td style="padding:10px;font-size:12px">{{ o['username'] }}<br><small>{{ o['email'] }}</small></td><td style="padding:10px;font-size:12px">{{ o['product_name'] }}<br><b>₹{{ o['total_price']|int }}</b><br><small>{{ o['quantity'] }} qty</small></td><td style="padding:10px;font-size:12px"><span style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;{% if o['payment_method']=='UPI' %}background:#dbeafe;color:#1e40af{% else %}background:#fef9c3;color:#a16207{% endif %}">{{ o['payment_method'] }}</span><br><span style="font-size:11px">Pay: {{ o['payment_status'] }}</span><br>{% if o['payment_screenshot'] %}<a href="{{ url_for('static', filename='uploads/payments/' + o['payment_screenshot']) }}" target="_blank" style="font-size:11px;color:#2563eb">📸 Screenshot</a>{% endif %}{% if o['payment_method']=='UPI' and o['payment_status']=='Pending' %}<form method="POST" action="/owner/verify_payment/{{ o['id'] }}" style="margin-top:6px;display:flex;gap:4px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="payment_status" value="Verified" style="padding:6px 8px;background:#dcfce7;color:#15803d;border:none;border-radius:6px;font-size:11px;cursor:pointer;min-height:32px">✓ Verify</button><button name="payment_status" value="Rejected" style="padding:6px 8px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;cursor:pointer;min-height:32px">✗ Reject</button></form>{% endif %}</td><td style="padding:10px;font-size:12px"><span style="padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:#f1f5f9">{{ o['status'] }}</span><div style="font-size:11px;color:#475569;margin-top:6px;max-width:200px;white-space:pre-wrap">{{ o['address'] }}</div></td><td style="padding:10px"><form method="POST" action="/owner/order_status/{{ o['id'] }}" style="display:flex;gap:6px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="status" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;font-size:11px;min-height:34px"><option value="Placed" {% if o['status']=='Placed' %}selected{% endif %}>Placed</option><option value="Packed" {% if o['status']=='Packed' %}selected{% endif %}>Packed</option><option value="Shipped" {% if o['status']=='Shipped' %}selected{% endif %}>Shipped</option><option value="Out for Delivery" {% if o['status']=='Out for Delivery' %}selected{% endif %}>Out for Delivery</option><option value="Delivered" {% if o['status']=='Delivered' %}selected{% endif %}>Delivered</option><option value="Cancelled" {% if o['status']=='Cancelled' %}selected{% endif %}>Cancelled</option></select><button style="padding:6px 10px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:11px;cursor:pointer;min-height:34px">Update</button></form></td></tr>{% endfor %}</tbody></table></div></main>
+
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");
 }
 </script>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body><header class="navbar"><div class="logo"><a href="/">⚡ Bamarara Electronics - Owner</a></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a href="/owner/khata" style="background:#dc2626;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">📒 Khata Book {% if khata_total and khata_total['c'] >0 %}({{ khata_total['c'] }}){% endif %}</a><a href="/owner/report" style="background:#0ea5e9;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">📊 Report</a><a href="/owner/quick-bill" style="background:#16a34a;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">🧾 Quick Bill</a><a href="/owner/settings" style="background:#7c3aed;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">⚙️ Full Settings</a><a href="/owner/change-password" style="background:#000;color:white;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:13px">🔑 Password</a><a href="/" class="login-btn">View Site</a></div></header><main style="padding:24px;max-width:1100px;margin:0 auto">
-
-{% if khata_total and khata_total['t'] %}
-<div style="background:#fef2f2;border:2px solid #fecaca;padding:14px 16px;border-radius:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-<span style="color:#dc2626;font-weight:800">📒 Khata Me Udhar: ₹{{ khata_total['t']|int }} | {{ khata_total['c'] }} log se lena hai</span>
-<a href="/owner/khata?status=Udhar" style="background:#dc2626;color:white;padding:6px 12px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700">🔴 Udhar Wale Dekho</a>
-</div>
-{% endif %}
-
-{% if low_stock and low_stock|length > 0 %}
-<div style="background:#fef2f2;border:2px solid #fecaca;padding:16px;border-radius:16px;margin-bottom:24px">
-<h3 style="color:#dc2626;margin:0 0 8px 0">⚠️ Low Stock Alert - Market se laana hai ({{ low_stock|length }})</h3>
-{% for p in low_stock %}<span style="display:inline-block;background:white;border:1px solid #fecaca;padding:5px 12px;border-radius:20px;margin:4px;font-size:12px;font-weight:600">{{ p['name'] }} - Sirf {{ p['stock'] }} bacha</span>{% endfor %}
-</div>
-{% endif %}
-
-<h2>👑 Add Product - Photo & Video</h2><form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data" style="background:white;padding:20px;border-radius:16px;display:grid;gap:12px;margin-bottom:30px;box-shadow:0 4px 20px rgba(0,0,0,0.05)"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="text" name="name" placeholder="Product Name ex: Inverter Pipe 1 inch" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><select name="category" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0">{% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select><input type="number" name="stock" placeholder="Stock Quantity" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><input type="number" step="0.01" name="cost_price" placeholder="Kharid Daam ₹ (Cost)" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#f0fdf4"><input type="number" step="0.01" name="price" placeholder="Bechne ka Daam ₹ (Selling)" required style="padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:#fffbeb"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><label style="background:#f0f9ff;padding:12px;border-radius:10px;border:2px dashed #0ea5e9;text-align:center;cursor:pointer;font-weight:600">📸 Photo<input type="file" name="photo" accept="image/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label><label style="background:#fdf2f8;padding:12px;border-radius:10px;border:2px dashed #ec4899;text-align:center;cursor:pointer;font-weight:600">🎥 Video<input type="file" name="video" accept="video/*" style="display:none" onchange="this.parentElement.style.background='#dcfce7'"></label></div><textarea name="description" placeholder="Product Description" style="padding:12px;border-radius:10px;border:1px solid #e2e8f0"></textarea><button type="submit" style="padding:14px;background:linear-gradient(90deg,#0ea5e9,#6366f1);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer">Add Product 🚀</button></form>
-
-<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h2 style="margin:0">📦 All Products ({{ products|length }})</h2><div style="display:flex;gap:6px;flex-wrap:wrap">{% for c in categories %}<a href="/owner?category={{ c }}" style="padding:6px 12px;background:{% if selected_cat==c %}#0f172a{% else %}white{% endif %};color:{% if selected_cat==c %}white{% else %}#334155{% endif %};border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700">{{ c }}</a>{% endfor %}<a href="/owner" style="padding:6px 12px;background:white;border:1px solid #e2e8f0;border-radius:20px;text-decoration:none;font-size:11px;font-weight:700;color:#334155">All</a></div></div>
-
-<div class="product-grid">{% for p in products %}<div class="product-card" style="background:white;padding:12px;border-radius:16px;border:{% if p['stock'] <=5 %}2px solid #dc2626{% else %}1px solid #e2e8f0{% endif %};position:relative">{% if p['stock'] <=5 %}<span style="position:absolute;top:8px;right:8px;background:#dc2626;color:white;font-size:10px;padding:3px 8px;border-radius:20px;font-weight:700">LOW</span>{% endif %}{% if p['image'] %}<img src="{{ url_for('static', filename='uploads/' + p['image']) }}" style="width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:8px">{% endif %}{% if p['video'] %}<video src="{{ url_for('static', filename='uploads/' + p['video']) }}" style="width:100%;height:140px;border-radius:12px" controls></video>{% endif %}<h3 style="margin:6px 0">{{ p['name'] }}</h3><p style="font-size:12px;color:#475569;margin:0">{{ p['category'] }}</p><p style="margin:6px 0;font-size:13px;line-height:1.4">Bechne: <b>₹{{ p['price'] }}</b>{% if p['cost_price'] %}<br>Kharid: ₹{{ p['cost_price'] }} | <span style="color:#16a34a;font-weight:700">Profit ₹{{ (p['price'] - p['cost_price'])|int }}</span>{% endif %}<br>Stock: <b style="{% if p['stock'] <=5 %}color:#dc2626{% endif %}">{{ p['stock'] }}</b></p><div style="display:flex;gap:8px;margin-top:10px"><a href="/owner/edit/{{ p['id'] }}" style="flex:1;background:#dbeafe;color:#1e40af;text-align:center;padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:600">✏️ Edit</a><form method="POST" action="{{ url_for('delete_product', product_id=p['id']) }}" style="flex:1"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button style="width:100%;background:#fee2e2;color:#dc2626;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600">Delete</button></form></div></div>{% endfor %}</div>
-
-<h2 style="margin-top:40px">🧾 Orders + UPI Payments ({{ orders|length }}) - BOB: 9667311958@ybl</h2><div style="background:white;border-radius:16px;overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:950px"><thead style="background:#f8fafc"><tr><th style="padding:12px">ID</th><th style="padding:12px">Customer</th><th style="padding:12px">Product / Total</th><th style="padding:12px">Payment</th><th style="padding:12px">Status / Address</th><th style="padding:12px">Action</th></tr></thead><tbody>{% for o in orders %}<tr style="border-top:1px solid #e2e8f0"><td style="padding:12px">#{{ o['id'] }}</td><td style="padding:12px">{{ o['username'] }}<br><small>{{ o['email'] }}</small></td><td style="padding:12px">{{ o['product_name'] }}<br><b>₹{{ o['total_price']|int }}</b><br><small>{{ o['quantity'] }} qty</small></td><td style="padding:12px"><span style="padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;{% if o['payment_method']=='UPI' %}background:#dbeafe;color:#1e40af{% else %}background:#fef9c3;color:#a16207{% endif %}">{{ o['payment_method'] }}</span><br><span style="font-size:11px">Pay: {{ o['payment_status'] }}</span><br>{% if o['payment_screenshot'] %}<a href="{{ url_for('static', filename='uploads/payments/' + o['payment_screenshot']) }}" target="_blank" style="font-size:11px;color:#2563eb">📸 View Screenshot</a>{% endif %}{% if o['payment_method']=='UPI' and o['payment_status']=='Pending' %}<form method="POST" action="/owner/verify_payment/{{ o['id'] }}" style="margin-top:6px;display:flex;gap:4px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button name="payment_status" value="Verified" style="padding:4px 8px;background:#dcfce7;color:#15803d;border:none;border-radius:6px;font-size:11px;cursor:pointer">✓ Verify</button><button name="payment_status" value="Rejected" style="padding:4px 8px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;cursor:pointer">✗ Reject</button></form>{% endif %}</td><td style="padding:12px"><span style="padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;background:#f1f5f9">{{ o['status'] }}</span><div style="font-size:11px;color:#475569;margin-top:6px;max-width:200px;white-space:pre-wrap">{{ o['address'] }}</div></td><td style="padding:12px"><form method="POST" action="/owner/order_status/{{ o['id'] }}" style="display:flex;gap:6px"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><select name="status" style="padding:6px;border-radius:8px;border:1px solid #cbd5e1;font-size:11px"><option value="Placed" {% if o['status']=='Placed' %}selected{% endif %}>Placed</option><option value="Packed" {% if o['status']=='Packed' %}selected{% endif %}>Packed</option><option value="Shipped" {% if o['status']=='Shipped' %}selected{% endif %}>Shipped</option><option value="Out for Delivery" {% if o['status']=='Out for Delivery' %}selected{% endif %}>Out for Delivery</option><option value="Delivered" {% if o['status']=='Delivered' %}selected{% endif %}>Delivered</option><option value="Cancelled" {% if o['status']=='Cancelled' %}selected{% endif %}>Cancelled</option></select><button style="padding:6px 10px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:11px;cursor:pointer">Update</button></form></td></tr>{% endfor %}</tbody></table></div></main></body></html>
+</body>
+</html>>
